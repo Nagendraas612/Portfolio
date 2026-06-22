@@ -22,6 +22,16 @@
   const scrollTimeline  = document.getElementById('scrollTimeline');
   const stIndicatorGroup = document.getElementById('stIndicatorGroup');
   const stLabel         = document.getElementById('stLabel');
+  const orbitalWorkspace = document.querySelector('.orbital-workspace');
+  const orbitalNodes     = document.querySelectorAll('.orbital-node');
+  const detailsOverlay   = document.getElementById('projectDetailsOverlay');
+  const detailsCards     = document.querySelectorAll('.project-details-card');
+
+  /* ── Orbital timeline state ────────────────────────────── */
+  let orbitalAngle = 0;
+  let autoRotate = true;
+  let targetAngleOffset = 0;
+
 
   /* ── Wave config ───────────────────────────────────────── */
   const FRAME_COUNT = 200;
@@ -448,6 +458,104 @@
       loader.classList.add('hidden');
       setTimeout(() => { if (loader) loader.style.display = 'none'; }, 800);
     }, 1400);
+    }
+
+  /* ══════════════════════════════════════════════════════════
+     ORBITAL TIMELINE REDESIGN
+  ══════════════════════════════════════════════════════════ */
+  function updateOrbitalNodes() {
+    if (!orbitalWorkspace) return;
+    const count = orbitalNodes.length;
+    if (count === 0) return;
+
+    const workspaceW = orbitalWorkspace.offsetWidth;
+    const radius = window.innerWidth <= 768 ? Math.min(125, workspaceW * 0.28) : Math.min(190, workspaceW * 0.22);
+
+    orbitalNodes.forEach((node, idx) => {
+      const baseAngle = (idx / count) * 360;
+      const currentAngle = (baseAngle + orbitalAngle + targetAngleOffset) % 360;
+      const radian = (currentAngle * Math.PI) / 180;
+
+      const x = radius * Math.cos(radian);
+      const y = radius * Math.sin(radian);
+
+      const zIndex = Math.round(100 + 50 * Math.sin(radian));
+      const opacity = Math.max(0.65, Math.min(1, 0.65 + 0.35 * ((1 + Math.sin(radian)) / 2)));
+
+      node.style.transform = `translate(${x.toFixed(1)}px, ${y.toFixed(1)}px)`;
+      node.style.zIndex = zIndex;
+      node.style.opacity = opacity.toFixed(2);
+    });
+  }
+
+  function loopOrbital() {
+    if (autoRotate) {
+      orbitalAngle = (orbitalAngle + 0.15) % 360;
+      updateOrbitalNodes();
+    }
+    requestAnimationFrame(loopOrbital);
+  }
+
+  function showProjectDetails(projectId) {
+    if (!detailsOverlay) return;
+    autoRotate = false;
+    detailsCards.forEach(card => card.classList.remove('active'));
+    const targetCard = document.getElementById(`details-${projectId}`);
+    if (targetCard) {
+      detailsOverlay.classList.add('visible');
+      targetCard.classList.add('active');
+    }
+  }
+
+  function hideProjectDetails() {
+    if (!detailsOverlay) return;
+    detailsOverlay.classList.remove('visible');
+    detailsCards.forEach(card => card.classList.remove('active'));
+    autoRotate = true;
+  }
+
+  function setupOrbitalTimeline() {
+    if (!orbitalWorkspace) return;
+
+    orbitalNodes.forEach(node => {
+      node.addEventListener('mouseenter', () => {
+        if (autoRotate) autoRotate = false;
+      });
+      node.addEventListener('mouseleave', () => {
+        if (detailsOverlay && !detailsOverlay.classList.contains('visible')) {
+          autoRotate = true;
+        }
+      });
+      node.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const projectId = node.getAttribute('data-project');
+        showProjectDetails(projectId);
+
+        const idx = parseInt(node.style.getPropertyValue('--node-idx') || '0');
+        const count = orbitalNodes.length;
+        const targetAngle = (idx / count) * 360;
+        targetAngleOffset = (90 - targetAngle - orbitalAngle) % 360;
+        updateOrbitalNodes();
+      });
+    });
+
+    document.querySelectorAll('.details-close-btn').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        hideProjectDetails();
+      });
+    });
+
+    if (detailsOverlay) {
+      detailsOverlay.addEventListener('click', (e) => {
+        if (e.target === detailsOverlay) {
+          hideProjectDetails();
+        }
+      });
+    }
+
+    updateOrbitalNodes();
+    loopOrbital();
   }
 
   /* ══════════════════════════════════════════════════════════
@@ -468,6 +576,7 @@
     loadFrames();
     setupOceanCursor();
     hideLoader();
+    setupOrbitalTimeline();
 
     addEventListener('scroll', onScroll, { passive: true });
     addEventListener('resize', () => { updateHero(); }, { passive: true });

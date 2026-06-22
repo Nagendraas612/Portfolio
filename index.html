@@ -173,100 +173,177 @@
                 <span class="label">(02)</span>
             </div>
 
-            <div class="work-list">
-                 <article class="work-card reveal">
-                    <a href="https://eventai-w89h.onrender.com/" target="_blank" rel="noopener noreferrer" class="work-card-visual-link">
-                        <div class="work-card-visual">
-                            <div class="work-visual-inner pg-1">
-                                <img src="assests/FaceFetch.png" alt="FaceFetch Deployed Platform" class="work-card-img">
-                                <div class="work-visual-shine"></div>
+            <div class="orbital-workspace reveal">
+                <!-- Outer Ring Orbit Path -->
+                <div class="orbital-path-outer"></div>
+                <!-- Inner Ring Orbit Path -->
+                <div class="orbital-path-inner"></div>
+                
+                <!-- Central Core -->
+                <div class="orbital-core">
+                    <div class="core-pulse-outer"></div>
+                    <div class="core-pulse-inner"></div>
+                    <span class="core-label label">Projects</span>
+                </div>
+
+                <!-- Orbiting Nodes -->
+                <!-- Node 1: FaceFetch -->
+                <div class="orbital-node" data-project="facefetch" style="--node-idx: 0;">
+                    <div class="node-sphere">
+                        <span class="node-icon">📸</span>
+                    </div>
+                    <span class="node-title label">FaceFetch</span>
+                </div>
+
+                <!-- Node 2: AIML Exam System -->
+                <div class="orbital-node" data-project="seating" style="--node-idx: 1;">
+                    <div class="node-sphere">
+                        <span class="node-icon">📝</span>
+                    </div>
+                    <span class="node-title label">AIML Exam</span>
+                </div>
+
+                <!-- Node 3: Future Research -->
+                <div class="orbital-node" data-project="future" style="--node-idx: 2;">
+                    <div class="node-sphere future-pulse">
+                        <span class="node-icon">🔮</span>
+                    </div>
+                    <span class="node-title label">Future Labs</span>
+                </div>
+            </div>
+
+            <!-- Project Details Modal Overlay -->
+            <div class="project-details-overlay" id="projectDetailsOverlay">
+                <!-- FaceFetch Details Card -->
+                <article class="project-details-card" id="details-facefetch">
+                    <button class="details-close-btn" aria-label="Close details">&times;</button>
+                    <div class="details-grid">
+                        <div class="details-visual">
+                            <img src="assests/FaceFetch.png" alt="FaceFetch Deployed Platform" class="details-img">
+                            <div class="details-visual-shine"></div>
+                        </div>
+                        <div class="details-info">
+                            <div class="details-meta">
+                                <span class="work-card-type label">Event Tech Platform</span>
+                                <span class="work-card-year label">2025</span>
+                                <span class="details-status-badge label status-completed">Completed</span>
                             </div>
-                            <div class="work-card-number label">01</div>
-                        </div>
-                    </a>
-                    <div class="work-card-info">
-                        <div class="work-card-meta">
-                            <span class="work-card-type label">Event Tech Platform</span>
-                            <span class="work-card-year label">2025</span>
-                        </div>
-                        <h2 class="work-card-title">
-                            <a href="https://eventai-w89h.onrender.com/" target="_blank" rel="noopener noreferrer" class="work-link-anchor">
-                                FaceFetch <span class="work-link-arrow">↗</span>
+                            <h2 class="details-title font-serif">FaceFetch</h2>
+                            <p class="details-desc">
+                                AI-powered event photo retrieval. Attendees upload a selfie and instantly surface every
+                                photo of themselves from thousands of event images — using facial recognition at scale.
+                                Built for speed, accuracy, and seamless attendee UX.
+                            </p>
+                            <div class="details-tags">
+                                <span class="work-tag">Computer Vision</span>
+                                <span class="work-tag">Facial Recognition</span>
+                                <span class="work-tag">AI Search</span>
+                                <span class="work-tag">UX Design</span>
+                            </div>
+                            <div class="details-divider"></div>
+                            <div class="details-impact">
+                                <div class="impact-stat">
+                                    <span class="impact-num">1000s</span>
+                                    <span class="impact-label label">Photos scanned</span>
+                                </div>
+                                <div class="impact-stat">
+                                    <span class="impact-num">&lt;2s</span>
+                                    <span class="impact-label label">Retrieval time</span>
+                                </div>
+                                <div class="impact-stat">
+                                    <span class="impact-num">AI</span>
+                                    <span class="impact-label label">Face matching</span>
+                                </div>
+                            </div>
+                            <a href="https://eventai-w89h.onrender.com/" target="_blank" rel="noopener noreferrer" class="details-link-btn">
+                                Visit Deployed App <span class="details-arrow">↗</span>
                             </a>
-                        </h2>
-                        <p class="work-card-desc">
-                            AI-powered event photo retrieval. Attendees upload a selfie and instantly surface every
-                            photo of themselves from thousands of event images — using facial recognition at scale.
-                            Built for speed, accuracy, and seamless attendee UX.
-                        </p>
-                        <div class="work-card-tags">
-                            <span class="work-tag">Computer Vision</span>
-                            <span class="work-tag">Facial Recognition</span>
-                            <span class="work-tag">AI Search</span>
-                            <span class="work-tag">UX Design</span>
-                        </div>
-                        <div class="work-card-divider"></div>
-                        <div class="work-card-impact">
-                            <div class="impact-stat">
-                                <span class="impact-num">1000s</span>
-                                <span class="impact-label label">Photos scanned</span>
-                            </div>
-                            <div class="impact-stat">
-                                <span class="impact-num">&lt;2s</span>
-                                <span class="impact-label label">Retrieval time</span>
-                            </div>
-                            <div class="impact-stat">
-                                <span class="impact-num">AI</span>
-                                <span class="impact-label label">Face matching</span>
-                            </div>
                         </div>
                     </div>
                 </article>
 
-                <article class="work-card reveal reveal-delay-1">
-                    <a href="https://seating-dak2.onrender.com/" target="_blank" rel="noopener noreferrer" class="work-card-visual-link">
-                        <div class="work-card-visual">
-                            <div class="work-visual-inner pg-2">
-                                <img src="assests/seating.png" alt="AIML Exam System Platform" class="work-card-img">
-                                <div class="work-visual-shine"></div>
+                <!-- AIML Exam System Details Card -->
+                <article class="project-details-card" id="details-seating">
+                    <button class="details-close-btn" aria-label="Close details">&times;</button>
+                    <div class="details-grid">
+                        <div class="details-visual">
+                            <img src="assests/seating.png" alt="AIML Exam System Platform" class="details-img">
+                            <div class="details-visual-shine"></div>
+                        </div>
+                        <div class="details-info">
+                            <div class="details-meta">
+                                <span class="work-card-type label">Education Platform</span>
+                                <span class="work-card-year label">2025</span>
+                                <span class="details-status-badge label status-completed">Completed</span>
                             </div>
-                            <div class="work-card-number label">02</div>
-                        </div>
-                    </a>
-                    <div class="work-card-info">
-                        <div class="work-card-meta">
-                            <span class="work-card-type label">Education Platform</span>
-                            <span class="work-card-year label">2025</span>
-                        </div>
-                        <h2 class="work-card-title">
-                            <a href="https://seating-dak2.onrender.com/" target="_blank" rel="noopener noreferrer" class="work-link-anchor">
-                                AIML Exam System <span class="work-link-arrow">↗</span>
+                            <h2 class="details-title font-serif">AIML Exam System</h2>
+                            <p class="details-desc">
+                                Full-stack examination management platform with intelligent seating algorithms,
+                                anti-copy pattern generation, OAuth 2.0 secure authentication, and automated
+                                PDF generation. Built for academic institutions that need reliability at scale.
+                            </p>
+                            <div class="details-tags">
+                                <span class="work-tag">Workflow Automation</span>
+                                <span class="work-tag">Smart Algorithms</span>
+                                <span class="work-tag">Secure Auth</span>
+                                <span class="work-tag">PDF Generation</span>
+                            </div>
+                            <div class="details-divider"></div>
+                            <div class="details-impact">
+                                <div class="impact-stat">
+                                    <span class="impact-num">Auto</span>
+                                    <span class="impact-label label">Seating logic</span>
+                                </div>
+                                <div class="impact-stat">
+                                    <span class="impact-num">OAuth</span>
+                                    <span class="impact-label label">Secure login</span>
+                                </div>
+                                <div class="impact-stat">
+                                    <span class="impact-num">PDF</span>
+                                    <span class="impact-label label">Auto-generated</span>
+                                </div>
+                            </div>
+                            <a href="https://seating-dak2.onrender.com/" target="_blank" rel="noopener noreferrer" class="details-link-btn">
+                                Visit Deployed App <span class="details-arrow">↗</span>
                             </a>
-                        </h2>
-                        <p class="work-card-desc">
-                            Full-stack examination management platform with intelligent seating algorithms,
-                            anti-copy pattern generation, OAuth 2.0 secure authentication, and automated
-                            PDF generation. Built for academic institutions that need reliability at scale.
-                        </p>
-                        <div class="work-card-tags">
-                            <span class="work-tag">Workflow Automation</span>
-                            <span class="work-tag">Smart Algorithms</span>
-                            <span class="work-tag">Secure Auth</span>
-                            <span class="work-tag">PDF Generation</span>
                         </div>
-                        <div class="work-card-divider"></div>
-                        <div class="work-card-impact">
-                            <div class="impact-stat">
-                                <span class="impact-num">Auto</span>
-                                <span class="impact-label label">Seating logic</span>
+                    </div>
+                </article>
+
+                <!-- Future Labs Details Card -->
+                <article class="project-details-card" id="details-future">
+                    <button class="details-close-btn" aria-label="Close details">&times;</button>
+                    <div class="details-grid">
+                        <div class="details-visual future-visual">
+                            <div class="future-visual-glowing">🔮</div>
+                        </div>
+                        <div class="details-info">
+                            <div class="details-meta">
+                                <span class="work-card-type label">AI Research Lab</span>
+                                <span class="work-card-year label">2026</span>
+                                <span class="details-status-badge label status-pending">In Progress</span>
                             </div>
-                            <div class="impact-stat">
-                                <span class="impact-num">OAuth</span>
-                                <span class="impact-label label">Secure login</span>
+                            <h2 class="details-title font-serif">Future Labs</h2>
+                            <p class="details-desc">
+                                Exploring new frontiers in Deep Learning, Multi-Modal Agents, and Cognitive Systems.
+                                Currently building custom training workflows and experimenting with low-latency LLM fine-tuning mechanisms.
+                                Stay tuned for upcoming releases.
+                            </p>
+                            <div class="details-tags">
+                                <span class="work-tag">Deep Learning</span>
+                                <span class="work-tag">Agentic AI</span>
+                                <span class="work-tag">Cognitive Modeling</span>
                             </div>
-                            <div class="impact-stat">
-                                <span class="impact-num">PDF</span>
-                                <span class="impact-label label">Auto-generated</span>
+                            <div class="details-divider"></div>
+                            <div class="details-impact">
+                                <div class="impact-stat">
+                                    <span class="impact-num">NLP</span>
+                                    <span class="impact-label label">Fine-tuning</span>
+                                </div>
+                                <div class="impact-stat">
+                                    <span class="impact-num">Agent</span>
+                                    <span class="impact-label label">Autonomy</span>
+                                </div>
                             </div>
                         </div>
                     </div>
