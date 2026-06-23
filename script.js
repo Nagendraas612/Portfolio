@@ -22,15 +22,9 @@
   const scrollTimeline  = document.getElementById('scrollTimeline');
   const stIndicatorGroup = document.getElementById('stIndicatorGroup');
   const stLabel         = document.getElementById('stLabel');
-  const orbitalWorkspace = document.querySelector('.orbital-workspace');
-  const orbitalNodes     = document.querySelectorAll('.orbital-node');
+  const projectRows      = document.querySelectorAll('.cyber-project-row');
   const detailsOverlay   = document.getElementById('projectDetailsOverlay');
   const detailsCards     = document.querySelectorAll('.project-details-card');
-
-  /* ── Orbital timeline state ────────────────────────────── */
-  let orbitalAngle = 0;
-  let autoRotate = true;
-  let targetAngleOffset = 0;
 
 
   /* ── Wave config ───────────────────────────────────────── */
@@ -197,7 +191,7 @@
       let cursorOpacity = 0;
       if (p > 0.85) {
         const factor = (p - 0.85) / 0.15; // 0 to 1
-        cursorOpacity = factor * 0.55;    // max opacity 55%
+        cursorOpacity = factor * 0.12;    // max opacity 12% for a very subtle ambient look
       }
       oceanCanvas.style.opacity = cursorOpacity.toFixed(4);
     }
@@ -280,8 +274,8 @@
   class Particle {
     constructor(x, y) {
       this.x = x; this.y = y;
-      this.size     = Math.random() * 110 + 50;
-      this.maxAlpha = Math.random() * .14  + .04;
+      this.size     = Math.random() * 60 + 30; // smaller ambient size
+      this.maxAlpha = Math.random() * .04  + .01; // much lower alpha for subtleness
       this.life     = 1;
       this.decay    = Math.random() * .006 + .003;
       this.vx       = (Math.random() - .5) * 1.2;
@@ -390,6 +384,147 @@
   }
 
   /* ══════════════════════════════════════════════════════════
+     PROJECTS HUD (IRON MAN holographic cards)
+  ══════════════════════════════════════════════════════════ */
+  function showProjectDetails(projectId) {
+    if (!detailsOverlay) return;
+    
+    detailsCards.forEach(card => card.classList.remove('active'));
+    
+    const targetCard = document.getElementById(`details-${projectId}`);
+    if (targetCard) {
+      detailsOverlay.classList.add('visible');
+      targetCard.classList.add('active');
+      document.body.style.overflow = 'hidden';
+    }
+  }
+
+  function hideProjectDetails() {
+    if (!detailsOverlay) return;
+    
+    detailsOverlay.classList.remove('visible');
+    setTimeout(() => {
+      detailsCards.forEach(card => card.classList.remove('active'));
+    }, 380);
+    
+    document.body.style.overflow = '';
+  }
+
+  function setupProjectDetailsHUD() {
+    if (!projectRows.length) return;
+
+    projectRows.forEach(row => {
+      row.addEventListener('click', () => {
+        const projectId = row.getAttribute('data-project');
+        if (projectId) {
+          showProjectDetails(projectId);
+        }
+      });
+    });
+
+    document.querySelectorAll('.details-close-btn').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        hideProjectDetails();
+      });
+    });
+
+    if (detailsOverlay) {
+      detailsOverlay.addEventListener('click', (e) => {
+        if (e.target === detailsOverlay) {
+          hideProjectDetails();
+        }
+      });
+    }
+  }
+
+  /* ══════════════════════════════════════════════════════════
+     PROJECTS HOVER PREVIEWS (Luke Baffait Style)
+     ══════════════════════════════════════════════════════════ */
+  let previewX = 0, previewY = 0;
+  let targetPreviewX = 0, targetPreviewY = 0;
+  let previewScale = 0.85;
+  let targetPreviewScale = 0.85;
+  let previewRotation = 0;
+  let targetPreviewRotation = 0;
+  let isPreviewActive = false;
+
+  function animateProjectPreview() {
+    const previewEl = document.getElementById('cyberHoverPreview');
+    if (!previewEl) return;
+
+    const dx = targetPreviewX - previewX;
+    const dy = targetPreviewY - previewY;
+    previewX += dx * 0.12;
+    previewY += dy * 0.12;
+
+    const scaleDiff = targetPreviewScale - previewScale;
+    previewScale += scaleDiff * 0.15;
+
+    const rotDiff = targetPreviewRotation - previewRotation;
+    previewRotation += rotDiff * 0.15;
+
+    // Dynamic tilt based on cursor velocity/speed
+    const speedX = Math.max(-15, Math.min(15, dx * 0.1));
+    targetPreviewRotation = speedX * 1.5;
+
+    previewEl.style.transform = `translate3d(${previewX}px, ${previewY}px, 0) translate(-50%, -50%) scale(${previewScale}) rotate(${previewRotation}deg)`;
+
+    requestAnimationFrame(animateProjectPreview);
+  }
+
+  function setupProjectHoverPreviews() {
+    const previewEl = document.getElementById('cyberHoverPreview');
+    const previewImg = document.getElementById('cyberPreviewImage');
+    const previewDate = document.getElementById('cyberPreviewDate');
+    
+    if (!previewEl || !projectRows.length) return;
+
+    // Start tracking animation loop
+    requestAnimationFrame(animateProjectPreview);
+
+    document.addEventListener('mousemove', (e) => {
+      targetPreviewX = e.clientX;
+      targetPreviewY = e.clientY;
+    });
+
+    projectRows.forEach(row => {
+      row.addEventListener('mouseenter', (e) => {
+        const imgPath = row.getAttribute('data-img');
+        const dateText = row.getAttribute('data-date');
+        
+        if (previewImg && imgPath) {
+          previewImg.src = imgPath;
+        }
+        if (previewDate && dateText) {
+          previewDate.textContent = dateText;
+        }
+
+        isPreviewActive = true;
+        targetPreviewScale = 1;
+        previewEl.classList.add('visible');
+
+        // Set initial positions immediately on hover enter to prevent jumping
+        targetPreviewX = e.clientX;
+        targetPreviewY = e.clientY;
+        previewX = targetPreviewX;
+        previewY = targetPreviewY;
+      });
+
+      row.addEventListener('mouseleave', () => {
+        isPreviewActive = false;
+        targetPreviewScale = 0.85;
+        previewEl.classList.remove('visible');
+      });
+
+      row.addEventListener('mousemove', (e) => {
+        targetPreviewX = e.clientX;
+        targetPreviewY = e.clientY;
+      });
+    });
+  }
+
+  /* ══════════════════════════════════════════════════════════
      SMOOTH SCROLL NAV
   ══════════════════════════════════════════════════════════ */
   function setupNav() {
@@ -459,105 +594,6 @@
       setTimeout(() => { if (loader) loader.style.display = 'none'; }, 800);
     }, 1400);
     }
-
-  /* ══════════════════════════════════════════════════════════
-     ORBITAL TIMELINE REDESIGN
-  ══════════════════════════════════════════════════════════ */
-  function updateOrbitalNodes() {
-    if (!orbitalWorkspace) return;
-    const count = orbitalNodes.length;
-    if (count === 0) return;
-
-    const workspaceW = orbitalWorkspace.offsetWidth;
-    const radius = window.innerWidth <= 768 ? Math.min(125, workspaceW * 0.28) : Math.min(190, workspaceW * 0.22);
-
-    orbitalNodes.forEach((node, idx) => {
-      const baseAngle = (idx / count) * 360;
-      const currentAngle = (baseAngle + orbitalAngle + targetAngleOffset) % 360;
-      const radian = (currentAngle * Math.PI) / 180;
-
-      const x = radius * Math.cos(radian);
-      const y = radius * Math.sin(radian);
-
-      const zIndex = Math.round(100 + 50 * Math.sin(radian));
-      const opacity = Math.max(0.65, Math.min(1, 0.65 + 0.35 * ((1 + Math.sin(radian)) / 2)));
-
-      node.style.transform = `translate(${x.toFixed(1)}px, ${y.toFixed(1)}px)`;
-      node.style.zIndex = zIndex;
-      node.style.opacity = opacity.toFixed(2);
-    });
-  }
-
-  function loopOrbital() {
-    if (autoRotate) {
-      orbitalAngle = (orbitalAngle + 0.15) % 360;
-      updateOrbitalNodes();
-    }
-    requestAnimationFrame(loopOrbital);
-  }
-
-  function showProjectDetails(projectId) {
-    if (!detailsOverlay) return;
-    autoRotate = false;
-    detailsCards.forEach(card => card.classList.remove('active'));
-    const targetCard = document.getElementById(`details-${projectId}`);
-    if (targetCard) {
-      detailsOverlay.classList.add('visible');
-      targetCard.classList.add('active');
-    }
-  }
-
-  function hideProjectDetails() {
-    if (!detailsOverlay) return;
-    detailsOverlay.classList.remove('visible');
-    detailsCards.forEach(card => card.classList.remove('active'));
-    autoRotate = true;
-  }
-
-  function setupOrbitalTimeline() {
-    if (!orbitalWorkspace) return;
-
-    orbitalNodes.forEach(node => {
-      node.addEventListener('mouseenter', () => {
-        if (autoRotate) autoRotate = false;
-      });
-      node.addEventListener('mouseleave', () => {
-        if (detailsOverlay && !detailsOverlay.classList.contains('visible')) {
-          autoRotate = true;
-        }
-      });
-      node.addEventListener('click', (e) => {
-        e.stopPropagation();
-        const projectId = node.getAttribute('data-project');
-        showProjectDetails(projectId);
-
-        const idx = parseInt(node.style.getPropertyValue('--node-idx') || '0');
-        const count = orbitalNodes.length;
-        const targetAngle = (idx / count) * 360;
-        targetAngleOffset = (90 - targetAngle - orbitalAngle) % 360;
-        updateOrbitalNodes();
-      });
-    });
-
-    document.querySelectorAll('.details-close-btn').forEach(btn => {
-      btn.addEventListener('click', (e) => {
-        e.stopPropagation();
-        hideProjectDetails();
-      });
-    });
-
-    if (detailsOverlay) {
-      detailsOverlay.addEventListener('click', (e) => {
-        if (e.target === detailsOverlay) {
-          hideProjectDetails();
-        }
-      });
-    }
-
-    updateOrbitalNodes();
-    loopOrbital();
-  }
-
   /* ══════════════════════════════════════════════════════════
      SCROLL HANDLER
   ══════════════════════════════════════════════════════════ */
@@ -576,7 +612,8 @@
     loadFrames();
     setupOceanCursor();
     hideLoader();
-    setupOrbitalTimeline();
+    setupProjectDetailsHUD();
+    setupProjectHoverPreviews();
 
     addEventListener('scroll', onScroll, { passive: true });
     addEventListener('resize', () => { updateHero(); }, { passive: true });

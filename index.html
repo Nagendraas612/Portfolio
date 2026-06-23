@@ -173,42 +173,29 @@
                 <span class="label">(02)</span>
             </div>
 
-            <div class="orbital-workspace reveal">
-                <!-- Outer Ring Orbit Path -->
-                <div class="orbital-path-outer"></div>
-                <!-- Inner Ring Orbit Path -->
-                <div class="orbital-path-inner"></div>
-                
-                <!-- Central Core -->
-                <div class="orbital-core">
-                    <div class="core-pulse-outer"></div>
-                    <div class="core-pulse-inner"></div>
-                    <span class="core-label label">Projects</span>
+            <div class="cyber-projects-list reveal">
+                <!-- Row 1: FaceFetch -->
+                <div class="cyber-project-row" data-project="facefetch" data-img="assests/FaceFetch.png" data-date="01 // 2025">
+                    <div class="project-row-left">
+                        <span class="project-row-num font-mono">01 //</span>
+                        <h3 class="project-row-title font-serif">FaceFetch</h3>
+                    </div>
+                    <div class="project-row-right font-mono">
+                        <span class="project-row-type">Event Tech Platform</span>
+                        <span class="project-row-arrow">➔</span>
+                    </div>
                 </div>
 
-                <!-- Orbiting Nodes -->
-                <!-- Node 1: FaceFetch -->
-                <div class="orbital-node" data-project="facefetch" style="--node-idx: 0;">
-                    <div class="node-sphere">
-                        <span class="node-icon">📸</span>
+                <!-- Row 2: AIML Exam System -->
+                <div class="cyber-project-row" data-project="seating" data-img="assests/seating.png" data-date="02 // 2025">
+                    <div class="project-row-left">
+                        <span class="project-row-num font-mono">02 //</span>
+                        <h3 class="project-row-title font-serif">AIML Exam System</h3>
                     </div>
-                    <span class="node-title label">FaceFetch</span>
-                </div>
-
-                <!-- Node 2: AIML Exam System -->
-                <div class="orbital-node" data-project="seating" style="--node-idx: 1;">
-                    <div class="node-sphere">
-                        <span class="node-icon">📝</span>
+                    <div class="project-row-right font-mono">
+                        <span class="project-row-type">Education Platform</span>
+                        <span class="project-row-arrow">➔</span>
                     </div>
-                    <span class="node-title label">AIML Exam</span>
-                </div>
-
-                <!-- Node 3: Future Research -->
-                <div class="orbital-node" data-project="future" style="--node-idx: 2;">
-                    <div class="node-sphere future-pulse">
-                        <span class="node-icon">🔮</span>
-                    </div>
-                    <span class="node-title label">Future Labs</span>
                 </div>
             </div>
 
@@ -310,44 +297,7 @@
                     </div>
                 </article>
 
-                <!-- Future Labs Details Card -->
-                <article class="project-details-card" id="details-future">
-                    <button class="details-close-btn" aria-label="Close details">&times;</button>
-                    <div class="details-grid">
-                        <div class="details-visual future-visual">
-                            <div class="future-visual-glowing">🔮</div>
-                        </div>
-                        <div class="details-info">
-                            <div class="details-meta">
-                                <span class="work-card-type label">AI Research Lab</span>
-                                <span class="work-card-year label">2026</span>
-                                <span class="details-status-badge label status-pending">In Progress</span>
-                            </div>
-                            <h2 class="details-title font-serif">Future Labs</h2>
-                            <p class="details-desc">
-                                Exploring new frontiers in Deep Learning, Multi-Modal Agents, and Cognitive Systems.
-                                Currently building custom training workflows and experimenting with low-latency LLM fine-tuning mechanisms.
-                                Stay tuned for upcoming releases.
-                            </p>
-                            <div class="details-tags">
-                                <span class="work-tag">Deep Learning</span>
-                                <span class="work-tag">Agentic AI</span>
-                                <span class="work-tag">Cognitive Modeling</span>
-                            </div>
-                            <div class="details-divider"></div>
-                            <div class="details-impact">
-                                <div class="impact-stat">
-                                    <span class="impact-num">NLP</span>
-                                    <span class="impact-label label">Fine-tuning</span>
-                                </div>
-                                <div class="impact-stat">
-                                    <span class="impact-num">Agent</span>
-                                    <span class="impact-label label">Autonomy</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </article>
+
             </div>
         </div>
     </section>
@@ -514,14 +464,19 @@
         </div>
     </footer>
 
-    <!-- Vertical Scroll Timeline -->
-    <div class="scroll-timeline" id="scrollTimeline">
-        <div class="st-track"></div>
-        <div class="st-indicator-group" id="stIndicatorGroup">
-            <span class="st-label visible" id="stLabel">About</span>
-            <div class="st-indicator-bar"></div>
+    <!-- Floating Project Hover Preview -->
+    <div class="cyber-hover-preview" id="cyberHoverPreview">
+        <div class="cyber-preview-card" id="cyberPreviewCard">
+            <div class="cyber-preview-meta font-mono">
+                <span class="cyber-preview-date" id="cyberPreviewDate">01 // 2025</span>
+                <span class="cyber-preview-label">PREVIEW</span>
+            </div>
+            <div class="cyber-preview-image-wrap">
+                <img id="cyberPreviewImage" src="" alt="Project Preview">
+            </div>
         </div>
     </div>
+
     <script src="script.js"></script>
 </body>
 
