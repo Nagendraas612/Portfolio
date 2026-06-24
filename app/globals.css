@@ -2133,3 +2133,87 @@ button {
     font-size: clamp(2.2rem, 12vw, 4.5rem) !important;
   }
 }
+
+/* ─── Hero Bottom Bar & Nav overrides ─── */
+.hero-bottom-bar {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  width: 100% !important;
+  padding: 0 var(--pad) !important;
+  font-family: var(--mono) !important;
+  font-size: 0.8rem !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.08em !important;
+  color: var(--text-2) !important;
+  pointer-events: all !important;
+}
+
+.hbb-left {
+  display: flex !important;
+  align-items: center !important;
+}
+
+.hbb-center {
+  display: flex !important;
+  align-items: center !important;
+  gap: 12px !important;
+}
+
+.hbb-right {
+  display: flex !important;
+  align-items: center !important;
+  gap: 24px !important;
+}
+
+.hbb-link, .hbb-page-link {
+  color: var(--text-3) !important;
+  transition: color var(--fast) var(--ease-out) !important;
+}
+
+.hbb-link:hover, .hbb-page-link:hover {
+  color: var(--accent-lite) !important;
+}
+
+.hbb-divider {
+  color: var(--text-4) !important;
+}
+
+/* ─── Scroll Timeline Interactive Anchors ─── */
+.st-anchors {
+  position: absolute !important;
+  right: -10px !important;
+  top: 0 !important;
+  width: 24px !important;
+  height: 240px !important;
+  z-index: 10 !important;
+}
+.st-anchor {
+  position: absolute !important;
+  right: 0 !important;
+  width: 24px !important;
+  height: 60px !important;
+  cursor: pointer !important;
+  pointer-events: auto !important;
+}
+
+/* ─── Back to Home link inside subnav ─── */
+.nav-back-link {
+  font-family: var(--mono) !important;
+  font-size: 0.8rem !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.08em !important;
+  color: var(--text-3) !important;
+  transition: color var(--fast) var(--ease-out) !important;
+}
+.nav-back-link:hover {
+  color: var(--accent-lite) !important;
+}
+
+/* ─── Sub-page Content layout ─── */
+.subpage-container {
+  padding-top: 100px !important;
+  min-height: 100vh !important;
+  background: var(--bg) !important;
+  position: relative !important;
+}

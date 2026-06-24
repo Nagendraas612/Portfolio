@@ -273,6 +273,11 @@ export default function PortfolioClient({ settings, about, profilePhotoUrl, proj
   const previewRef = useRef<HTMLDivElement>(null)
   const previewImgRef = useRef<HTMLImageElement>(null)
   const previewDateRef = useRef<HTMLSpanElement>(null)
+  
+  const timelineRef = useRef<HTMLDivElement>(null)
+  const stIndicatorGroupRef = useRef<HTMLDivElement>(null)
+  const stLabelRef = useRef<HTMLSpanElement>(null)
+  const labelTimeoutRef = useRef<number | null>(null)
 
   // State
   const [activeProject, setActiveProject] = useState<string | null>(null)
@@ -416,6 +421,64 @@ export default function PortfolioClient({ settings, about, profilePhotoUrl, proj
       navRef.current.style.background = st > 60
         ? 'linear-gradient(to bottom,rgba(7,17,26,.96) 0%,rgba(7,17,26,.6) 80%,transparent 100%)'
         : 'transparent'
+    }
+
+    // ─── Scroll Timeline sync ───
+    const timeline = timelineRef.current
+    const indicatorGroup = stIndicatorGroupRef.current
+    const label = stLabelRef.current
+    if (timeline && indicatorGroup && label) {
+      const hero = document.getElementById('hero')
+      if (hero) {
+        const scrollTop = window.scrollY || document.documentElement.scrollTop || 0
+        const heroHeight = hero.offsetHeight
+        const isPastHero = scrollTop > heroHeight - window.innerHeight * 0.95
+        
+        if (isPastHero) {
+          timeline.style.opacity = '1'
+          timeline.style.pointerEvents = 'auto'
+          
+          const sections = ['section-about', 'section-work', 'section-skills', 'section-contact']
+          const sectionNames = ['About', 'Work', 'Skills', 'Contact']
+          let activeIndex = 0
+          
+          const isAtBottom = window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 20
+          
+          if (isAtBottom) {
+            activeIndex = 3
+          } else {
+            const viewThreshold = window.innerHeight * 0.4
+            for (let idx = 0; idx < sections.length; idx++) {
+              const el = document.getElementById(sections[idx])
+              if (el) {
+                const rect = el.getBoundingClientRect()
+                if (rect.top <= viewThreshold && rect.bottom > viewThreshold) {
+                  activeIndex = idx
+                  break
+                }
+              }
+            }
+          }
+          
+          indicatorGroup.style.transform = `translateY(${activeIndex * 60}px)`
+          
+          const targetLabel = sectionNames[activeIndex]
+          if (label.textContent !== targetLabel) {
+            label.classList.remove('visible')
+            if (labelTimeoutRef.current) window.clearTimeout(labelTimeoutRef.current)
+            labelTimeoutRef.current = window.setTimeout(() => {
+              label.textContent = targetLabel
+              label.classList.add('visible')
+            }, 100)
+          } else {
+            label.classList.add('visible')
+          }
+        } else {
+          timeline.style.opacity = '0'
+          timeline.style.pointerEvents = 'none'
+          label.classList.remove('visible')
+        }
+      }
     }
   }, [getProgress, drawFrame])
 
@@ -702,12 +765,6 @@ export default function PortfolioClient({ settings, about, profilePhotoUrl, proj
         <a className="nav-logo" href="#hero" onClick={(e) => handleNavClick(e, '#hero')}>
           NA<span className="nav-dot">.</span>
         </a>
-        <div className="nav-links">
-          <a className="nav-btn" data-section="section-about" href="#section-about" onClick={(e) => handleNavClick(e, '#section-about')}>About</a>
-          <a className="nav-btn" data-section="section-work" href="#section-work" onClick={(e) => handleNavClick(e, '#section-work')}>Work</a>
-          <a className="nav-btn" data-section="section-skills" href="#section-skills" onClick={(e) => handleNavClick(e, '#section-skills')}>Skills</a>
-          <a className="nav-btn" data-section="section-contact" href="#section-contact" onClick={(e) => handleNavClick(e, '#section-contact')}>Contact</a>
-        </div>
       </nav>
 
       {/* HERO */}
@@ -760,15 +817,27 @@ export default function PortfolioClient({ settings, about, profilePhotoUrl, proj
                 }
               </p>
             </div>
-            <div className="hero-sub reveal-instant">
-              <div className="hero-sub-line">
-                <span className="hero-sub-text">{s.heroSubtitle}</span>
+            <div className="hero-bottom-bar reveal-instant">
+              <div className="hbb-left">
+                <span>→ V1.0</span>
               </div>
-              <div className="hero-sub-scroll">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
-                  <path d="M12 5v14M5 12l7 7 7-7" />
-                </svg>
-                <span>Scroll</span>
+              <div className="hbb-center">
+                <a href={`mailto:${s.email}`} className="hbb-link">Email</a>
+                <span className="hbb-divider">/</span>
+                {s.linkedinUrl && (
+                  <>
+                    <a href={s.linkedinUrl} target="_blank" rel="noopener noreferrer" className="hbb-link">LinkedIn</a>
+                    <span className="hbb-divider">/</span>
+                  </>
+                )}
+                {s.githubUrl && (
+                  <a href={s.githubUrl} target="_blank" rel="noopener noreferrer" className="hbb-link">GitHub</a>
+                )}
+              </div>
+              <div className="hbb-right">
+                <a href="/about" className="hbb-page-link">About</a>
+                <a href="/work" className="hbb-page-link">Work</a>
+                <a href="/contact" className="hbb-page-link">Contact</a>
               </div>
             </div>
           </div>
@@ -1028,6 +1097,21 @@ export default function PortfolioClient({ settings, about, profilePhotoUrl, proj
           </div>
         </div>
       </footer>
+
+      {/* Scroll Timeline */}
+      <div className="scroll-timeline" id="scrollTimeline" ref={timelineRef}>
+        <div className="st-track"></div>
+        <div className="st-anchors">
+          <a href="#section-about" onClick={(e) => handleNavClick(e, '#section-about')} className="st-anchor" style={{ top: '0px' }} aria-label="Scroll to About"></a>
+          <a href="#section-work" onClick={(e) => handleNavClick(e, '#section-work')} className="st-anchor" style={{ top: '60px' }} aria-label="Scroll to Work"></a>
+          <a href="#section-skills" onClick={(e) => handleNavClick(e, '#section-skills')} className="st-anchor" style={{ top: '120px' }} aria-label="Scroll to Skills"></a>
+          <a href="#section-contact" onClick={(e) => handleNavClick(e, '#section-contact')} className="st-anchor" style={{ top: '180px' }} aria-label="Scroll to Contact"></a>
+        </div>
+        <div className="st-indicator-group" ref={stIndicatorGroupRef}>
+          <span className="st-label" ref={stLabelRef}>About</span>
+          <div className="st-indicator-bar"></div>
+        </div>
+      </div>
 
       {/* Floating Project Hover Preview */}
       <div className="cyber-hover-preview" id="cyberHoverPreview" ref={previewRef}>
