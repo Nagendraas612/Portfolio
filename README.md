@@ -1,56 +1,34 @@
-# 🌊 Nagendra AS — Creative Developer Portfolio
+This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
-A high-end, premium editorial-style portfolio showcasing creative developer work, AI/ML systems, and front-end engineering. Inspired by state-of-the-art visual web design with fluid scroll-driven canvas transitions and interactive media cards.
+## Getting Started
 
-Live site at: [https://nagendraas612.github.io/Portfolio/](https://nagendraas612.github.io/Portfolio/)
+First, run the development server:
 
-## ✨ Key Features & Visual Systems
-
-- **Split Scroll Animation (Luke Baffait Style)**: A custom scroll-driven sequence where the first and last name split horizontally on scroll, revealing an expanding video-frame canvas and a centered tagline: *“I build intelligent systems.”*
-- **Ambient Ocean Aura**: Drift-animated background blobs, custom cursor effects, and subtle translucent blue/cyan gradients highlighting sections.
-- **Editorial Typography**: Styled in custom serif (`Instrument Serif`) and sans-serif (`Inter`) layouts to ensure optimal reading comfort.
-- **Restructured About Section**: Clean split grid with text bio/interests on the left and profile photo + status values card on the right.
-- **Interactive Project Showcase**: Deployed project visuals (FaceFetch and AIML Exam System) featuring grease-filtered hover transitions, sliding light reflections, and link overlays leading to live deployments.
-
----
-
-## 📁 File Structure
-
-The project has been optimized down to a minimal, high-performance folder layout:
-```
-Portfolio/
-├── assests/            # Portfolio profile images & project mockups
-├── waves/              # 200 high-res image frames for scroll canvas
-├── index.html          # Structure & SEO metadata
-├── styles.css          # Unified stylesheet with HSL tokens & animations
-├── script.js           # Scroll-driven handlers, particle networks & custom cursor
-└── README.md           # Project Documentation
+```bash
+npm run dev
+# or
+yarn dev
+# or
+pnpm dev
+# or
+bun dev
 ```
 
----
+Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-## 🛠️ Technology Stack
+You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
 
-- **Markup**: Semantic HTML5 with SEO meta tags.
-- **Styling**: Vanilla CSS3 custom variables with responsive grids, absolute overlays, and performance-optimized cubic-bezier transitions.
-- **Interactions**: Vanilla Javascript (ES6) driving the scroll-timeline percentages, layout coordinates, canvas render calculations, and particle networks.
+## Learn More
 
----
+To learn more about Next.js, take a look at the following resources:
 
-## 🚀 Local Development
+- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
+- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
 
-1. **Clone the repository**:
-   ```bash
-   git clone https://github.com/Nagendraas612/Portfolio.git
-   cd Portfolio
-   ```
-2. **Start a local dev server** (e.g. using Python's http server module):
-   ```bash
-   python -m http.server 8000
-   ```
-3. **Open the browser**:
-   Navigate to `http://localhost:8000/index.html` to run the portfolio.
+You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
 
----
+## Deploy on Vercel
 
-**© 2026 Nagendra AS**
+The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+
+Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
