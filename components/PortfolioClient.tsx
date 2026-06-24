@@ -311,6 +311,25 @@ export default function PortfolioClient({ settings, about, profilePhotoUrl, proj
     return Math.max(0, Math.min(1, scrollTop / range))
   }, [])
 
+  /* ─── RESIZE CANVAS (fixed backing resolution) ─── */
+  const resizeCanvas = useCallback(() => {
+    const canvas = waveCanvasRef.current
+    if (!canvas) return
+    const vw = window.innerWidth
+    const vh = window.innerHeight
+    const maxW = Math.min(vw * 0.65, 800)
+    const maxH = Math.min(vh * 0.50, 500)
+    const dpr = Math.min(typeof window !== 'undefined' ? window.devicePixelRatio : 1, 2)
+    canvas.width = maxW * dpr
+    canvas.height = maxH * dpr
+    const ctx = canvas.getContext('2d')
+    if (ctx) {
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0)
+    }
+    lastCanvasWRef.current = maxW
+    lastCanvasHRef.current = maxH
+  }, [])
+
   /* ─── DRAW FRAME ─── */
   const drawFrame = useCallback((idx: number) => {
     const ctx = waveCtxRef.current
@@ -388,17 +407,6 @@ export default function PortfolioClient({ settings, about, profilePhotoUrl, proj
       wc.style.height = waveH.toFixed(1) + 'px'
       wc.style.opacity = waveOpacity.toFixed(4)
       wc.style.borderRadius = waveBorderRadius.toFixed(1) + 'px'
-    }
-
-    const canvas = waveCanvasRef.current
-    const ctx = waveCtxRef.current
-    const tw = Math.round(waveW), th = Math.round(waveH)
-    if (canvas && ctx && tw > 0 && th > 0 && (lastCanvasWRef.current !== tw || lastCanvasHRef.current !== th)) {
-      const dpr = Math.min(devicePixelRatio || 1, 2)
-      canvas.width = tw * dpr; canvas.height = th * dpr
-      canvas.style.width = tw + 'px'; canvas.style.height = th + 'px'
-      ctx.setTransform(dpr, 0, 0, dpr, 0, 0)
-      lastCanvasWRef.current = tw; lastCanvasHRef.current = th
     }
 
     const frameIdx = Math.min(FRAME_COUNT - 1, Math.round(prog * (FRAME_COUNT - 1)))
@@ -535,17 +543,58 @@ export default function PortfolioClient({ settings, about, profilePhotoUrl, proj
 
     // ── Wave canvas ──
     const waveCanvas = waveCanvasRef.current
+    
+    // Safety exit timeout (15 seconds max load)
+    const safetyTimeout = setTimeout(() => {
+      if (framesLoadedRef.current < FRAME_COUNT) {
+        console.warn('Preload safety timeout triggered — revealing main page')
+        if (loaderRef.current) {
+          loaderRef.current.classList.add('hidden')
+          setTimeout(() => { if (loaderRef.current) loaderRef.current.style.display = 'none' }, 850)
+        }
+        updateHero()
+      }
+    }, 15000)
+
+    const handleFrameLoaded = () => {
+      framesLoadedRef.current++
+      const pct = Math.floor((framesLoadedRef.current / FRAME_COUNT) * 100)
+      
+      const loaderBarFill = document.getElementById('loaderBarFill')
+      const loaderPercentage = document.getElementById('loaderPercentage')
+      if (loaderBarFill) loaderBarFill.style.width = `${pct}%`
+      if (loaderPercentage) loaderPercentage.textContent = `Loading ${pct}%`
+      
+      if (framesLoadedRef.current === FRAME_COUNT) {
+        clearTimeout(safetyTimeout)
+        setTimeout(() => {
+          if (loaderRef.current) {
+            loaderRef.current.classList.add('hidden')
+            setTimeout(() => { if (loaderRef.current) loaderRef.current.style.display = 'none' }, 850)
+          }
+        }, 350)
+        updateHero()
+      }
+    }
+
     if (waveCanvas) {
       waveCtxRef.current = waveCanvas.getContext('2d')
-      const dpr = Math.min(devicePixelRatio || 1, 2)
-      waveCanvas.width = 1 * dpr; waveCanvas.height = 1 * dpr
-      if (waveCtxRef.current) waveCtxRef.current.scale(dpr, dpr)
+      resizeCanvas()
 
-      // Load frames
+      // Load frames with pre-decoding for hardware acceleration
       for (let i = 1; i <= FRAME_COUNT; i++) {
         const img = new Image()
         img.src = FRAME_PATH + String(i).padStart(4, '0') + FRAME_EXT
-        img.onload = img.onerror = () => { if (++framesLoadedRef.current === FRAME_COUNT) updateHero() }
+        img.onload = () => {
+          if (typeof img.decode === 'function') {
+            img.decode()
+              .then(handleFrameLoaded)
+              .catch(handleFrameLoaded)
+          } else {
+            handleFrameLoaded()
+          }
+        }
+        img.onerror = handleFrameLoaded
         framesRef.current.push(img)
       }
     }
@@ -599,15 +648,20 @@ export default function PortfolioClient({ settings, about, profilePhotoUrl, proj
         requestAnimationFrame(updateHero)
       }
     }
+    const handleResize = () => {
+      resizeCanvas()
+      updateHero()
+    }
     window.addEventListener('scroll', onScroll, { passive: true })
-    window.addEventListener('resize', updateHero, { passive: true })
+    window.addEventListener('resize', handleResize, { passive: true })
+    resizeCanvas()
     updateHero()
     if (document.fonts) document.fonts.ready.then(updateHero)
     return () => {
       window.removeEventListener('scroll', onScroll)
-      window.removeEventListener('resize', updateHero)
+      window.removeEventListener('resize', handleResize)
     }
-  }, [updateHero])
+  }, [updateHero, resizeCanvas])
 
   /* ─── Scroll reveal ─── */
   useEffect(() => {
@@ -672,15 +726,7 @@ export default function PortfolioClient({ settings, about, profilePhotoUrl, proj
     return () => io.disconnect()
   }, [])
 
-  /* ─── Loader hide ─── */
-  useEffect(() => {
-    const timer1 = setTimeout(() => {
-      loaderRef.current?.classList.add('hidden')
-      const timer2 = setTimeout(() => { if (loaderRef.current) loaderRef.current.style.display = 'none' }, 800)
-      return () => clearTimeout(timer2)
-    }, 1400)
-    return () => clearTimeout(timer1)
-  }, [])
+  // Loader timer removed; handled dynamically by frames preloading.
 
   /* ─── Project hover preview animation loop ─── */
   useEffect(() => {
@@ -752,7 +798,10 @@ export default function PortfolioClient({ settings, about, profilePhotoUrl, proj
             <span className="loader-n">N</span><span className="loader-rest">agendra A.S.</span>
           </div>
           <div className="loader-bar">
-            <div className="loader-bar-fill"></div>
+            <div className="loader-bar-fill" id="loaderBarFill"></div>
+          </div>
+          <div className="loader-percentage font-mono" id="loaderPercentage" style={{ fontSize: '0.7rem', marginTop: '12px', opacity: 0.6, letterSpacing: '0.1em' }}>
+            0%
           </div>
         </div>
       </div>
