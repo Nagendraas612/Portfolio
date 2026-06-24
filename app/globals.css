@@ -1639,6 +1639,39 @@ button {
   transition-delay: .48s;
 }
 
+/* ─── SCROLL-LINKED WORD REVEAL ──────────────────────────── */
+.scroll-text-block {
+  /* Parent container for scroll-revealed text */
+}
+
+.scroll-word {
+  display: inline;
+  opacity: 0.12;
+  transition: opacity 0.35s cubic-bezier(.25, .46, .45, .94);
+  will-change: opacity;
+}
+
+.scroll-word.sw-active {
+  opacity: 1;
+}
+
+.scroll-word em {
+  font-style: italic;
+  color: var(--accent-lite);
+  opacity: inherit;
+}
+
+.scroll-word.sw-active em {
+  text-shadow: 0 0 28px rgba(45, 212, 228, .18);
+}
+
+/* Override the reveal animation for scroll-text-block parents —
+   we handle visibility ourselves via JS word-by-word */
+.scroll-text-block.reveal {
+  opacity: 1;
+  transform: translateY(0);
+}
+
 /* ─── RESPONSIVE ──────────────────────────────────────────── */
 @media (max-width: 1100px) {
   .work-card {

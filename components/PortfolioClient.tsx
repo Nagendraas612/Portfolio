@@ -192,7 +192,7 @@ class Particle {
 }
 
 /* ═══════════════════════════════════════════════════════════════
-   HELPER: Render text with emphasis
+   HELPER: Render text with emphasis (fallback for non-scroll areas)
    ═══════════════════════════════════════════════════════════════ */
 function renderWithEmphasis(text: string, emphasis: string | undefined) {
   if (!emphasis || !text.includes(emphasis)) {
@@ -202,6 +202,52 @@ function renderWithEmphasis(text: string, emphasis: string | undefined) {
   const before = text.slice(0, idx)
   const after = text.slice(idx + emphasis.length)
   return <>{before}<em>{emphasis}</em>{after}</>
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   HELPER: Scroll-linked word reveal text
+   Splits text into word-level <span> elements with emphasis support.
+   Each word starts dim and lights up as the user scrolls.
+   ═══════════════════════════════════════════════════════════════ */
+function ScrollRevealText({ text, emphasis, className }: { text: string; emphasis?: string; className?: string }) {
+  // Build a list of { word, isEm } segments
+  const segments: { word: string; isEm: boolean }[] = []
+
+  if (emphasis && text.includes(emphasis)) {
+    const idx = text.indexOf(emphasis)
+    const before = text.slice(0, idx)
+    const after = text.slice(idx + emphasis.length)
+
+    before.split(/\s+/).filter(Boolean).forEach(w => segments.push({ word: w, isEm: false }))
+    emphasis.split(/\s+/).filter(Boolean).forEach(w => segments.push({ word: w, isEm: true }))
+    after.split(/\s+/).filter(Boolean).forEach(w => segments.push({ word: w, isEm: false }))
+  } else {
+    text.split(/\s+/).filter(Boolean).forEach(w => segments.push({ word: w, isEm: false }))
+  }
+
+  return (
+    <span className={`scroll-text-block ${className || ''}`} data-scroll-reveal>
+      {segments.map((seg, i) => (
+        <span key={i} className="scroll-word" data-sw-index={i}>
+          {seg.isEm ? <em>{seg.word}</em> : seg.word}
+          {i < segments.length - 1 ? ' ' : ''}
+        </span>
+      ))}
+    </span>
+  )
+}
+
+function ScrollRevealPlain({ text, className }: { text: string; className?: string }) {
+  const words = text.split(/\s+/).filter(Boolean)
+  return (
+    <span className={`scroll-text-block ${className || ''}`} data-scroll-reveal>
+      {words.map((w, i) => (
+        <span key={i} className="scroll-word" data-sw-index={i}>
+          {w}{i < words.length - 1 ? ' ' : ''}
+        </span>
+      ))}
+    </span>
+  )
 }
 
 /* ═══════════════════════════════════════════════════════════════
@@ -510,6 +556,42 @@ export default function PortfolioClient({ settings, about, profilePhotoUrl, proj
     return () => obs.disconnect()
   }, [])
 
+  /* ─── Scroll-linked word reveal ─── */
+  useEffect(() => {
+    const blocks = document.querySelectorAll('[data-scroll-reveal]')
+    if (!blocks.length) return
+
+    const updateWords = () => {
+      const vh = window.innerHeight
+      // The "active zone" — words whose top is above this threshold get activated
+      const activateY = vh * 0.78
+
+      blocks.forEach(block => {
+        const words = block.querySelectorAll('.scroll-word') as NodeListOf<HTMLElement>
+        words.forEach(word => {
+          const rect = word.getBoundingClientRect()
+          // Word center relative to viewport
+          const wordCenter = rect.top + rect.height / 2
+          if (wordCenter < activateY) {
+            word.classList.add('sw-active')
+          } else {
+            word.classList.remove('sw-active')
+          }
+        })
+      })
+    }
+
+    // Run on load and scroll
+    updateWords()
+    window.addEventListener('scroll', updateWords, { passive: true })
+    window.addEventListener('resize', updateWords, { passive: true })
+
+    return () => {
+      window.removeEventListener('scroll', updateWords)
+      window.removeEventListener('resize', updateWords)
+    }
+  }, [])
+
   /* ─── Nav active highlight ─── */
   useEffect(() => {
     const sections = document.querySelectorAll('.scroll-section')
@@ -702,11 +784,11 @@ export default function PortfolioClient({ settings, about, profilePhotoUrl, proj
           </div>
           <div className="about-layout">
             <div className="info-content">
-              <p className="info-role reveal">
-                {renderWithEmphasis(a.role, a.roleEmphasis)}
+              <p className="info-role reveal scroll-text-block">
+                <ScrollRevealText text={a.role} emphasis={a.roleEmphasis} />
               </p>
-              <p className="info-bio reveal reveal-delay-1">
-                {renderWithEmphasis(a.bio, a.bioEmphasis)}
+              <p className="info-bio reveal scroll-text-block">
+                <ScrollRevealText text={a.bio} emphasis={a.bioEmphasis} />
               </p>
             </div>
             <div className="info-photo-area reveal">
@@ -832,9 +914,9 @@ export default function PortfolioClient({ settings, about, profilePhotoUrl, proj
             <span className="section-line"></span>
           </div>
           <div className="skills-layout">
-            <div className="skills-intro reveal">
+            <div className="skills-intro reveal scroll-text-block">
               <p className="skills-intro-text">
-                Tools and technologies I use to bring ideas to life — from <em>intelligent systems</em> to <em>polished interfaces</em>.
+                <ScrollRevealText text="Tools and technologies I use to bring ideas to life — from intelligent systems to polished interfaces." emphasis="intelligent systems" />
               </p>
             </div>
             <div className="skills-grid reveal reveal-delay-1">
@@ -868,7 +950,7 @@ export default function PortfolioClient({ settings, about, profilePhotoUrl, proj
                   : <>Let&apos;s build<br /><em>something great.</em></>
                 }
               </h2>
-              <p className="contact-subhead">{s.contactSubhead}</p>
+              <p className="contact-subhead"><ScrollRevealPlain text={s.contactSubhead} /></p>
               <a href={`mailto:${s.email}`} className="contact-email-btn">
                 <span>{s.email}</span>
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
