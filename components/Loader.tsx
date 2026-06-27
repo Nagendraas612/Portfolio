@@ -47,14 +47,43 @@ export default function Loader({ onComplete, fade }: LoaderProps) {
     let leftY = (ROWS - PADDLE_H) / 2
     let rightY = (ROWS - PADDLE_H) / 2
     let startTime: number | null = null
+    let lastTime = 0
 
     function getBrightness(c: number, r: number): number {
-      const lRow = Math.round(leftY)
-      const rRow = Math.round(rightY)
-      if (c === 0 && r >= lRow && r < lRow + PADDLE_H) return 1.0
-      if (c === COLS - 1 && r >= rRow && r < rRow + PADDLE_H) return 1.0
-      if (c === Math.round(ballX) && r === Math.round(ballY)) return 1.0
-      return 0.08 // Dim inactive dots
+      let brightness = 0.04 // Baseline inactive brightness
+
+      // Left paddle contribution (smooth fade at the edges)
+      if (c === 0) {
+        const dist = Math.min(
+          Math.abs(r - leftY),
+          Math.abs(r - (leftY + 1)),
+          Math.abs(r - (leftY + 2))
+        )
+        if (dist < 1.0) {
+          brightness = Math.max(brightness, 1.0 - dist)
+        }
+      }
+
+      // Right paddle contribution (smooth fade at the edges)
+      if (c === COLS - 1) {
+        const dist = Math.min(
+          Math.abs(r - rightY),
+          Math.abs(r - (rightY + 1)),
+          Math.abs(r - (rightY + 2))
+        )
+        if (dist < 1.0) {
+          brightness = Math.max(brightness, 1.0 - dist)
+        }
+      }
+
+      // Ball contribution (smooth sub-pixel light distribution)
+      const ballDist = Math.sqrt((c - ballX) ** 2 + (r - ballY) ** 2)
+      if (ballDist < 1.4) {
+        const ballBrightness = Math.max(0, 1.0 - ballDist / 1.4)
+        brightness = Math.max(brightness, ballBrightness)
+      }
+
+      return brightness
     }
 
     function draw() {
@@ -66,27 +95,29 @@ export default function Loader({ onComplete, fade }: LoaderProps) {
           const x = c * (DOT_SIZE + DOT_GAP) + DOT_SIZE / 2
           const y = r * (DOT_SIZE + DOT_GAP) + DOT_SIZE / 2
 
+          // 1. Draw static crisp background dot (faint white)
           ctx.beginPath()
           ctx.arc(x, y, DOT_SIZE / 2, 0, Math.PI * 2)
-
-          if (brightness > 0.5) {
-            // High-clarity sharp active dots (very subtle glow)
-            ctx.shadowColor = 'rgba(34, 211, 238, 0.4)'
-            ctx.shadowBlur = 2
-            ctx.fillStyle = '#22d3ee'
-          } else {
-            // Crisp inactive backdrop dots (subtle slate/white)
-            ctx.shadowBlur = 0
-            ctx.fillStyle = 'rgba(255, 255, 255, 0.04)'
-          }
-
+          ctx.shadowBlur = 0
+          ctx.fillStyle = 'rgba(255, 255, 255, 0.04)'
           ctx.fill()
+
+          // 2. Draw animated glowing active dot overlay (if close to ball/paddle)
+          if (brightness > 0.04) {
+            const alpha = (brightness - 0.04) / 0.96
+            ctx.beginPath()
+            ctx.arc(x, y, DOT_SIZE / 2, 0, Math.PI * 2)
+            ctx.shadowColor = 'rgba(34, 211, 238, 0.4)'
+            ctx.shadowBlur = 2 * alpha
+            ctx.fillStyle = `rgba(34, 211, 238, ${alpha.toFixed(3)})`
+            ctx.fill()
+          }
         }
       }
     }
 
-    function movePaddles() {
-      const spd = 0.08
+    function movePaddles(dt: number) {
+      const spd = 0.08 * dt
       const lc = leftY + PADDLE_H / 2
       const rc = rightY + PADDLE_H / 2
       if (ballY > lc + 0.3) leftY = Math.min(ROWS - PADDLE_H, leftY + spd)
@@ -95,9 +126,9 @@ export default function Loader({ onComplete, fade }: LoaderProps) {
       else if (ballY < rc - 0.3) rightY = Math.max(0, rightY - spd)
     }
 
-    function moveBall() {
-      ballX += ballDX
-      ballY += ballDY
+    function moveBall(dt: number) {
+      ballX += ballDX * dt
+      ballY += ballDY * dt
 
       if (ballY <= 0) {
         ballY = 0
@@ -136,12 +167,19 @@ export default function Loader({ onComplete, fade }: LoaderProps) {
     }
 
     function loop(ts: number) {
-      if (!startTime) startTime = ts
+      if (!startTime) {
+        startTime = ts
+        lastTime = ts
+      }
       const elapsed = ts - startTime
       const progress = Math.min(100, (elapsed / DURATION) * 100)
 
-      movePaddles()
-      moveBall()
+      // Calculate frame delta time relative to 60fps (~16.67ms)
+      const dt = Math.min(3, (ts - lastTime) / 16.67)
+      lastTime = ts
+
+      movePaddles(dt)
+      moveBall(dt)
       draw()
 
       if (progress < 100) {
