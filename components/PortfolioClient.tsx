@@ -250,6 +250,7 @@ export default function PortfolioClient({ settings, about, profilePhotoUrl, proj
   const waveCtxRef = useRef<CanvasRenderingContext2D | null>(null)
   const lastCanvasWRef = useRef(0)
   const lastCanvasHRef = useRef(0)
+  const nameOffsetRef = useRef(0)
   const oceanCtxRef = useRef<CanvasRenderingContext2D | null>(null)
   const particlesRef = useRef<Particle[]>([])
   const mouseRef = useRef({ x: -1000, y: -1000 })
@@ -312,6 +313,14 @@ export default function PortfolioClient({ settings, about, profilePhotoUrl, proj
     ctx.drawImage(img, dx, dy, dw, dh)
   }, [])
 
+  const calculateNameOffset = useCallback(() => {
+    if (heroFirstRef.current && heroLastRef.current) {
+      const firstWidth = heroFirstRef.current.getBoundingClientRect().width
+      const lastWidth = heroLastRef.current.getBoundingClientRect().width
+      nameOffsetRef.current = (firstWidth - lastWidth) / 2
+    }
+  }, [])
+
   /* ─── UPDATE HERO (scroll-driven) ─── */
   const updateHero = useCallback(() => {
     rafScheduledRef.current = false
@@ -353,11 +362,11 @@ export default function PortfolioClient({ settings, about, profilePhotoUrl, proj
     }
 
     if (heroFirstRef.current) {
-      heroFirstRef.current.style.right = `calc(50% + ${separation}px)`
+      heroFirstRef.current.style.right = `calc(50% + ${separation}px - ${nameOffsetRef.current}px)`
       heroFirstRef.current.style.transition = 'none'
     }
     if (heroLastRef.current) {
-      heroLastRef.current.style.left = `calc(50% + ${separation}px)`
+      heroLastRef.current.style.left = `calc(50% + ${separation}px + ${nameOffsetRef.current}px)`
       heroLastRef.current.style.transition = 'none'
     }
     if (nameWrapperRef.current) nameWrapperRef.current.style.opacity = nameOpacity.toFixed(4)
@@ -542,19 +551,11 @@ export default function PortfolioClient({ settings, about, profilePhotoUrl, proj
       waveCtxRef.current = waveCanvas.getContext('2d')
       resizeCanvas()
 
-      // Load frames with pre-decoding for hardware acceleration
+      // Load frames directly to trigger browser cache
       for (let i = 1; i <= FRAME_COUNT; i++) {
         const img = new Image()
         img.src = FRAME_PATH + String(i).padStart(4, '0') + FRAME_EXT
-        img.onload = () => {
-          if (typeof img.decode === 'function') {
-            img.decode()
-              .then(handleFrameLoaded)
-              .catch(handleFrameLoaded)
-          } else {
-            handleFrameLoaded()
-          }
-        }
+        img.onload = handleFrameLoaded
         img.onerror = handleFrameLoaded
         framesRef.current.push(img)
       }
@@ -610,14 +611,21 @@ export default function PortfolioClient({ settings, about, profilePhotoUrl, proj
       }
     }
     const handleResize = () => {
+      calculateNameOffset()
       resizeCanvas()
       updateHero()
     }
     window.addEventListener('scroll', onScroll, { passive: true })
     window.addEventListener('resize', handleResize, { passive: true })
+    calculateNameOffset()
     resizeCanvas()
     updateHero()
-    if (document.fonts) document.fonts.ready.then(updateHero)
+    if (document.fonts) {
+      document.fonts.ready.then(() => {
+        calculateNameOffset()
+        updateHero()
+      })
+    }
     return () => {
       window.removeEventListener('scroll', onScroll)
       window.removeEventListener('resize', handleResize)

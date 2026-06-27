@@ -201,16 +201,10 @@ button {
 }
 
 .loader-bar-fill {
-  width: 0;
+  width: 0%;
   height: 100%;
   background: var(--accent);
-  animation: loaderFill 1.2s var(--ease-circ) forwards;
-}
-
-@keyframes loaderFill {
-  to {
-    width: 100%;
-  }
+  transition: width 0.1s ease-out;
 }
 
 /* ─── SITE NAV ────────────────────────────────────────────── */
@@ -1870,7 +1864,7 @@ button {
   top: 50% !important;
   transform: translateY(-50%) !important;
   padding-right: 0.12em !important;
-  font-size: clamp(4rem, 13vw, 13rem) !important;
+  font-size: clamp(2.2rem, 10.5vw, 5.5rem) !important;
   font-family: var(--serif) !important;
   font-weight: 400 !important;
   font-style: normal !important;
@@ -1890,7 +1884,7 @@ button {
   top: 50% !important;
   transform: translateY(-50%) !important;
   padding-left: 0.12em !important;
-  font-size: clamp(4rem, 13vw, 13rem) !important;
+  font-size: clamp(2.2rem, 10.5vw, 5.5rem) !important;
   font-family: var(--serif) !important;
   font-weight: 400 !important;
   font-style: italic !important;
