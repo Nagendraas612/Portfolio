@@ -1,3 +1,4 @@
+import 'server-only'
 import { createClient } from 'next-sanity'
 import { createImageUrlBuilder } from '@sanity/image-url'
 import type { SanityImageSource } from '@sanity/image-url'
