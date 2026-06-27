@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useRef, useCallback, useState } from 'react'
+import NextImage from 'next/image'
 
 /* ═══════════════════════════════════════════════════════════════
    TYPE DEFINITIONS
@@ -473,6 +474,15 @@ export default function PortfolioClient({ settings, about, profilePhotoUrl, proj
     document.body.style.overflow = ''
   }, [])
 
+  useEffect(() => {
+    if (!detailsVisible) return
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') closeDetails()
+    }
+    window.addEventListener('keydown', handleKeyDown)
+    return () => window.removeEventListener('keydown', handleKeyDown)
+  }, [detailsVisible, closeDetails])
+
   /* ─── INIT ALL EFFECTS ─── */
   useEffect(() => {
     if (typeof window === 'undefined') return
@@ -862,7 +872,7 @@ export default function PortfolioClient({ settings, about, profilePhotoUrl, proj
             </div>
             <div className="info-photo-area reveal">
               <div className="info-photo">
-                <img src={profilePhotoUrl} alt={s.name} className="profile-img" />
+                <NextImage src={profilePhotoUrl} alt={s.name} className="profile-img" width={600} height={800} priority />
                 <div className="info-photo-corner tl"></div>
                 <div className="info-photo-corner tr"></div>
                 <div className="info-photo-corner bl"></div>
@@ -939,7 +949,7 @@ export default function PortfolioClient({ settings, about, profilePhotoUrl, proj
                 <button className="details-close-btn" aria-label="Close details" onClick={closeDetails}>&times;</button>
                 <div className="details-grid">
                   <div className="details-visual">
-                    <img src={proj.screenshotUrl} alt={`${proj.title} Platform`} className="details-img" />
+                    <NextImage src={proj.screenshotUrl} alt={`${proj.title} Platform`} className="details-img" width={800} height={500} priority={activeProject === proj.slug.current} />
                     <div className="details-visual-shine"></div>
                   </div>
                   <div className="details-info">

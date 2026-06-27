@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useRef, useState, useCallback } from 'react'
+import Image from 'next/image'
 
 interface ImpactStat {
   value: string
@@ -63,6 +64,15 @@ export default function WorkClient({ projects, settings }: Props) {
     document.querySelectorAll('.reveal').forEach(el => obs.observe(el))
     return () => obs.disconnect()
   }, [])
+
+  useEffect(() => {
+    if (!detailsVisible) return
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') closeDetails()
+    }
+    window.addEventListener('keydown', handleKeyDown)
+    return () => window.removeEventListener('keydown', handleKeyDown)
+  }, [detailsVisible, closeDetails])
 
   useEffect(() => {
     const pp = previewPosRef.current
@@ -170,7 +180,7 @@ export default function WorkClient({ projects, settings }: Props) {
                 <button className="details-close-btn" aria-label="Close details" onClick={closeDetails}>&times;</button>
                 <div className="details-grid">
                   <div className="details-visual">
-                    <img src={proj.screenshotUrl} alt={`${proj.title} Platform`} className="details-img" />
+                    <Image src={proj.screenshotUrl} alt={`${proj.title} Platform`} className="details-img" width={800} height={500} priority={activeProject === proj.slug.current} />
                     <div className="details-visual-shine"></div>
                   </div>
                   <div className="details-info">

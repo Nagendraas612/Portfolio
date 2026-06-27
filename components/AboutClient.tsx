@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect } from 'react'
+import Image from 'next/image'
 
 interface About {
   role: string
@@ -75,7 +76,7 @@ export default function AboutClient({ about, skills, profilePhotoUrl, settings }
             </div>
             <div className="info-photo-area reveal">
               <div className="info-photo">
-                <img src={profilePhotoUrl} alt={settings.name} className="profile-img" />
+                <Image src={profilePhotoUrl} alt={settings.name} className="profile-img" width={600} height={800} priority />
                 <div className="info-photo-corner tl"></div>
                 <div className="info-photo-corner tr"></div>
                 <div className="info-photo-corner bl"></div>
