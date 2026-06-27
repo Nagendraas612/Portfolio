@@ -32,32 +32,7 @@ interface Props {
   settings: SiteSettings
 }
 
-function ScrollRevealText({ text, emphasis, className }: { text: string; emphasis?: string; className?: string }) {
-  const segments: { word: string; isEm: boolean }[] = []
-
-  if (emphasis && text.includes(emphasis)) {
-    const idx = text.indexOf(emphasis)
-    const before = text.slice(0, idx)
-    const after = text.slice(idx + emphasis.length)
-
-    before.split(/\s+/).filter(Boolean).forEach(w => segments.push({ word: w, isEm: false }))
-    emphasis.split(/\s+/).filter(Boolean).forEach(w => segments.push({ word: w, isEm: true }))
-    after.split(/\s+/).filter(Boolean).forEach(w => segments.push({ word: w, isEm: false }))
-  } else {
-    text.split(/\s+/).filter(Boolean).forEach(w => segments.push({ word: w, isEm: false }))
-  }
-
-  return (
-    <span className={`scroll-text-block ${className || ''}`} data-scroll-reveal>
-      {segments.map((seg, i) => (
-        <span key={i} className="scroll-word sw-active" style={{ opacity: 1 }}>
-          {seg.isEm ? <em>{seg.word}</em> : seg.word}
-          {i < segments.length - 1 ? ' ' : ''}
-        </span>
-      ))}
-    </span>
-  )
-}
+import { ScrollRevealText } from './ScrollReveal'
 
 export default function AboutClient({ about, skills, profilePhotoUrl, settings }: Props) {
   useEffect(() => {

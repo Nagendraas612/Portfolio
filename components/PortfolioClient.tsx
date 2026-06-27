@@ -209,46 +209,7 @@ function renderWithEmphasis(text: string, emphasis: string | undefined) {
    Splits text into word-level <span> elements with emphasis support.
    Each word starts dim and lights up as the user scrolls.
    ═══════════════════════════════════════════════════════════════ */
-function ScrollRevealText({ text, emphasis, className }: { text: string; emphasis?: string; className?: string }) {
-  // Build a list of { word, isEm } segments
-  const segments: { word: string; isEm: boolean }[] = []
-
-  if (emphasis && text.includes(emphasis)) {
-    const idx = text.indexOf(emphasis)
-    const before = text.slice(0, idx)
-    const after = text.slice(idx + emphasis.length)
-
-    before.split(/\s+/).filter(Boolean).forEach(w => segments.push({ word: w, isEm: false }))
-    emphasis.split(/\s+/).filter(Boolean).forEach(w => segments.push({ word: w, isEm: true }))
-    after.split(/\s+/).filter(Boolean).forEach(w => segments.push({ word: w, isEm: false }))
-  } else {
-    text.split(/\s+/).filter(Boolean).forEach(w => segments.push({ word: w, isEm: false }))
-  }
-
-  return (
-    <span className={`scroll-text-block ${className || ''}`} data-scroll-reveal>
-      {segments.map((seg, i) => (
-        <span key={i} className="scroll-word" data-sw-index={i}>
-          {seg.isEm ? <em>{seg.word}</em> : seg.word}
-          {i < segments.length - 1 ? ' ' : ''}
-        </span>
-      ))}
-    </span>
-  )
-}
-
-function ScrollRevealPlain({ text, className }: { text: string; className?: string }) {
-  const words = text.split(/\s+/).filter(Boolean)
-  return (
-    <span className={`scroll-text-block ${className || ''}`} data-scroll-reveal>
-      {words.map((w, i) => (
-        <span key={i} className="scroll-word" data-sw-index={i}>
-          {w}{i < words.length - 1 ? ' ' : ''}
-        </span>
-      ))}
-    </span>
-  )
-}
+import { ScrollRevealText, ScrollRevealPlain } from './ScrollReveal'
 
 /* ═══════════════════════════════════════════════════════════════
    MAIN COMPONENT
@@ -885,10 +846,10 @@ export default function PortfolioClient({ settings, about, profilePhotoUrl, proj
           <div className="about-layout">
             <div className="info-content">
               <p className="info-role reveal scroll-text-block">
-                <ScrollRevealText text={a.role} emphasis={a.roleEmphasis} />
+                <ScrollRevealText text={a.role} emphasis={a.roleEmphasis} isStatic={false} />
               </p>
               <p className="info-bio reveal scroll-text-block">
-                <ScrollRevealText text={a.bio} emphasis={a.bioEmphasis} />
+                <ScrollRevealText text={a.bio} emphasis={a.bioEmphasis} isStatic={false} />
               </p>
             </div>
             <div className="info-photo-area reveal">
@@ -1016,7 +977,7 @@ export default function PortfolioClient({ settings, about, profilePhotoUrl, proj
           <div className="skills-layout">
             <div className="skills-intro reveal scroll-text-block">
               <p className="skills-intro-text">
-                <ScrollRevealText text="Tools and technologies I use to bring ideas to life — from intelligent systems to polished interfaces." emphasis="intelligent systems" />
+                <ScrollRevealText text="Tools and technologies I use to bring ideas to life — from intelligent systems to polished interfaces." emphasis="intelligent systems" isStatic={false} />
               </p>
             </div>
             <div className="skills-grid reveal reveal-delay-1">
@@ -1050,7 +1011,7 @@ export default function PortfolioClient({ settings, about, profilePhotoUrl, proj
                   : <>Let&apos;s build<br /><em>something great.</em></>
                 }
               </h2>
-              <p className="contact-subhead"><ScrollRevealPlain text={s.contactSubhead} /></p>
+              <p className="contact-subhead"><ScrollRevealPlain text={s.contactSubhead} isStatic={false} /></p>
               <a href={`mailto:${s.email}`} className="contact-email-btn">
                 <span>{s.email}</span>
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">

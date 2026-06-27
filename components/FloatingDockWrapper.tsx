@@ -7,35 +7,32 @@ import Dock, { DockItemData } from './Dock';
 export default function FloatingDockWrapper() {
   const pathname = usePathname();
   const router = useRouter();
-  const [isVisible, setIsVisible] = useState(false);
+  const [opacity, setOpacity] = useState(1);
+  const [shouldRender, setShouldRender] = useState(false);
 
   useEffect(() => {
+    if (pathname !== '/') {
+      setShouldRender(false);
+      return;
+    }
+
     const handleScroll = () => {
       // Hide dock during the loading screen
       const loader = document.getElementById('loader');
       if (loader && !loader.classList.contains('hidden') && loader.style.display !== 'none') {
-        setIsVisible(false);
+        setOpacity(0);
+        setShouldRender(false);
         return;
       }
 
-      if (pathname !== '/') {
-        setIsVisible(true);
-        return;
-      }
-
-      const hero = document.getElementById('hero');
-      if (!hero) {
-        setIsVisible(false);
-        return;
-      }
       const scrollTop = window.scrollY || document.documentElement.scrollTop || 0;
-      const heroHeight = hero.offsetHeight;
       
-      // The timeline appears at scrollTop > heroHeight - window.innerHeight * 0.95.
-      // So the dock should disappear at the exact same scroll position!
-      const isPastHero = scrollTop > heroHeight - window.innerHeight * 0.95;
+      // Gradually fade out over the first 200px of scroll
+      const fadeRange = 200;
+      const newOpacity = Math.max(0, 1 - scrollTop / fadeRange);
       
-      setIsVisible(!isPastHero);
+      setOpacity(newOpacity);
+      setShouldRender(newOpacity > 0);
     };
 
     // Run on scroll, resize, and custom intervals to check loader state changes
@@ -43,7 +40,7 @@ export default function FloatingDockWrapper() {
     window.addEventListener('scroll', handleScroll, { passive: true });
     window.addEventListener('resize', handleScroll, { passive: true });
     
-    const interval = setInterval(handleScroll, 100);
+    const interval = setInterval(handleScroll, 50);
 
     if (document.fonts) {
       document.fonts.ready.then(handleScroll);
@@ -56,7 +53,7 @@ export default function FloatingDockWrapper() {
     };
   }, [pathname]);
 
-  if (!isVisible) return null;
+  if (pathname !== '/' || !shouldRender) return null;
 
   const handleNavClick = (e: React.MouseEvent, pageRoute: string) => {
     e.preventDefault();
@@ -88,18 +85,6 @@ export default function FloatingDockWrapper() {
       onClick: () => {
         const fakeEvent = { preventDefault: () => {} } as React.MouseEvent;
         handleNavClick(fakeEvent, '/work');
-      }
-    },
-    {
-      label: 'Contact',
-      icon: (
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-          <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
-        </svg>
-      ),
-      onClick: () => {
-        const fakeEvent = { preventDefault: () => {} } as React.MouseEvent;
-        handleNavClick(fakeEvent, '/contact');
       }
     },
     {
@@ -141,7 +126,18 @@ export default function FloatingDockWrapper() {
   ];
 
   return (
-    <div style={{ position: 'fixed', bottom: '24px', left: '0', width: '100%', display: 'flex', justifyContent: 'center', zIndex: 1000, pointerEvents: 'none' }}>
+    <div style={{
+      position: 'fixed',
+      bottom: '24px',
+      left: '0',
+      width: '100%',
+      display: shouldRender ? 'flex' : 'none',
+      justifyContent: 'center',
+      zIndex: 1000,
+      pointerEvents: opacity === 0 ? 'none' : 'auto',
+      opacity: opacity,
+      transition: 'opacity 0.05s ease-out'
+    }}>
       <div style={{ pointerEvents: 'auto' }}>
         <Dock 
           items={items}

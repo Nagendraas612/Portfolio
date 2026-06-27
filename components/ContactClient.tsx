@@ -18,18 +18,7 @@ interface Props {
   settings: SiteSettings
 }
 
-function ScrollRevealPlain({ text, className }: { text: string; className?: string }) {
-  const words = text.split(/\s+/).filter(Boolean)
-  return (
-    <span className={`scroll-text-block ${className || ''}`} data-scroll-reveal>
-      {words.map((w, i) => (
-        <span key={i} className="scroll-word sw-active" style={{ opacity: 1 }}>
-          {w}{i < words.length - 1 ? ' ' : ''}
-        </span>
-      ))}
-    </span>
-  )
-}
+import { ScrollRevealPlain } from './ScrollReveal'
 
 export default function ContactClient({ settings }: Props) {
   useEffect(() => {
