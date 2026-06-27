@@ -3,14 +3,14 @@
 import { useEffect, useRef, useState } from 'react'
 
 /* ── CONFIG ───────────────────────────── */
-const COLS = 9
-const ROWS = 7
-const DOT_SIZE = 14 // px diameter
-const DOT_GAP = 7 // px gap
+const COLS = 15
+const ROWS = 9
+const DOT_SIZE = 5 // px diameter
+const DOT_GAP = 3.5 // px gap
 const PADDLE_H = 3 // dots tall
 const DURATION = 4000 // ms total
-const BALL_SPD_X = 0.045
-const BALL_SPD_Y = 0.032
+const BALL_SPD_X = 0.08
+const BALL_SPD_Y = 0.055
 
 interface LoaderProps {
   onComplete: () => void
@@ -70,14 +70,14 @@ export default function Loader({ onComplete, fade }: LoaderProps) {
           ctx.arc(x, y, DOT_SIZE / 2, 0, Math.PI * 2)
 
           if (brightness > 0.5) {
-            // Glowing active dots (Cyan theme)
-            ctx.shadowColor = 'rgba(34, 211, 238, 0.85)'
-            ctx.shadowBlur = 8
+            // High-clarity sharp active dots (very subtle glow)
+            ctx.shadowColor = 'rgba(34, 211, 238, 0.4)'
+            ctx.shadowBlur = 2
             ctx.fillStyle = '#22d3ee'
           } else {
-            // Non-glowing dim backdrop dots (glassy cyan)
+            // Crisp inactive backdrop dots (subtle slate/white)
             ctx.shadowBlur = 0
-            ctx.fillStyle = 'rgba(34, 211, 238, 0.08)'
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.04)'
           }
 
           ctx.fill()
@@ -86,7 +86,7 @@ export default function Loader({ onComplete, fade }: LoaderProps) {
     }
 
     function movePaddles() {
-      const spd = 0.045
+      const spd = 0.08
       const lc = leftY + PADDLE_H / 2
       const rc = rightY + PADDLE_H / 2
       if (ballY > lc + 0.3) leftY = Math.min(ROWS - PADDLE_H, leftY + spd)
