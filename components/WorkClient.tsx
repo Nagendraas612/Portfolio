@@ -66,9 +66,14 @@ export default function WorkClient({ projects, settings }: Props) {
   }, [])
 
   useEffect(() => {
-    if (!detailsVisible) return
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') closeDetails()
+      if (e.key === 'Escape') {
+        if (detailsVisible) {
+          closeDetails()
+        } else {
+          window.location.href = '/'
+        }
+      }
     }
     window.addEventListener('keydown', handleKeyDown)
     return () => window.removeEventListener('keydown', handleKeyDown)

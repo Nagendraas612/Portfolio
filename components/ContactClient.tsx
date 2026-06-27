@@ -31,6 +31,16 @@ export default function ContactClient({ settings }: Props) {
     return () => obs.disconnect()
   }, [])
 
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        window.location.href = '/'
+      }
+    }
+    window.addEventListener('keydown', handleKeyDown)
+    return () => window.removeEventListener('keydown', handleKeyDown)
+  }, [])
+
   return (
     <div className="subpage-container">
       {/* Subpage Nav */}
