@@ -363,11 +363,11 @@ export default function PortfolioClient({ settings, about, profilePhotoUrl, proj
     }
 
     if (heroFirstRef.current) {
-      heroFirstRef.current.style.right = `calc(50% + ${separation}px - ${nameOffsetRef.current}px)`
+      heroFirstRef.current.style.right = `calc(50% + ${separation}px - ${nameOffsetRef.current}px + 0.12em)`
       heroFirstRef.current.style.transition = 'none'
     }
     if (heroLastRef.current) {
-      heroLastRef.current.style.left = `calc(50% + ${separation}px + ${nameOffsetRef.current}px)`
+      heroLastRef.current.style.left = `calc(50% + ${separation}px + ${nameOffsetRef.current}px + 0.12em)`
       heroLastRef.current.style.transition = 'none'
     }
     if (nameWrapperRef.current) nameWrapperRef.current.style.opacity = nameOpacity.toFixed(4)
