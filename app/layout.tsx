@@ -7,6 +7,8 @@ export const metadata: Metadata = {
     'Nagendra AS — Computer Science student specializing in AI, Machine Learning, and building innovative digital experiences.',
 }
 
+import FloatingDockWrapper from '../components/FloatingDockWrapper'
+
 export default function RootLayout({
   children,
 }: {
@@ -22,7 +24,10 @@ export default function RootLayout({
           rel="stylesheet"
         />
       </head>
-      <body>{children}</body>
+      <body>
+        {children}
+        <FloatingDockWrapper />
+      </body>
     </html>
   )
 }

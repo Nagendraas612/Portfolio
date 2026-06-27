@@ -870,24 +870,6 @@ export default function PortfolioClient({ settings, about, profilePhotoUrl, proj
               <div className="hbb-left">
                 <span>→ V1.0</span>
               </div>
-              <div className="hbb-center">
-                <a href={`mailto:${s.email}`} className="hbb-link">Email</a>
-                <span className="hbb-divider">/</span>
-                {s.linkedinUrl && (
-                  <>
-                    <a href={s.linkedinUrl} target="_blank" rel="noopener noreferrer" className="hbb-link">LinkedIn</a>
-                    <span className="hbb-divider">/</span>
-                  </>
-                )}
-                {s.githubUrl && (
-                  <a href={s.githubUrl} target="_blank" rel="noopener noreferrer" className="hbb-link">GitHub</a>
-                )}
-              </div>
-              <div className="hbb-right">
-                <a href="/about" className="hbb-page-link">About</a>
-                <a href="/work" className="hbb-page-link">Work</a>
-                <a href="/contact" className="hbb-page-link">Contact</a>
-              </div>
             </div>
           </div>
         </div>
