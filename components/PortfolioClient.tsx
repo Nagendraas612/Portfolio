@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useCallback, useState } from 'react'
 import NextImage from 'next/image'
+import Loader from './Loader'
 
 /* ═══════════════════════════════════════════════════════════════
    TYPE DEFINITIONS
@@ -222,7 +223,6 @@ export default function PortfolioClient({ settings, about, profilePhotoUrl, proj
   const sk = skills.length ? skills : FALLBACK_SKILLS
 
   // Refs
-  const loaderRef = useRef<HTMLDivElement>(null)
   const oceanCanvasRef = useRef<HTMLCanvasElement>(null)
   const waveCanvasRef = useRef<HTMLCanvasElement>(null)
   const waveContainerRef = useRef<HTMLDivElement>(null)
@@ -244,6 +244,14 @@ export default function PortfolioClient({ settings, about, profilePhotoUrl, proj
   // State
   const [activeProject, setActiveProject] = useState<string | null>(null)
   const [detailsVisible, setDetailsVisible] = useState(false)
+  const [loading, setLoading] = useState(true)
+  const [fadeLoader, setFadeLoader] = useState(false)
+
+  useEffect(() => {
+    if (typeof window !== 'undefined' && sessionStorage.getItem('loaded')) {
+      setLoading(false)
+    }
+  }, [])
 
   // Mutable refs for animation
   const framesRef = useRef<HTMLImageElement[]>([])
@@ -461,6 +469,16 @@ export default function PortfolioClient({ settings, about, profilePhotoUrl, proj
     }
   }, [getProgress, drawFrame])
 
+  /* ─── LOADER COMPLETE HANDLER ─── */
+  const handleLoaderComplete = useCallback(() => {
+    sessionStorage.setItem('loaded', '1')
+    setFadeLoader(true)
+    setTimeout(() => {
+      setLoading(false)
+      updateHero()
+    }, 800)
+  }, [updateHero])
+
   /* ─── OPEN / CLOSE PROJECT DETAILS ─── */
   const openDetails = useCallback((slug: string) => {
     setActiveProject(slug)
@@ -523,50 +541,14 @@ export default function PortfolioClient({ settings, about, profilePhotoUrl, proj
 
     // ── Wave canvas ──
     const waveCanvas = waveCanvasRef.current
-    
-    // Safety exit timeout (15 seconds max load)
-    const safetyTimeout = setTimeout(() => {
-      if (framesLoadedRef.current < FRAME_COUNT) {
-        console.warn('Preload safety timeout triggered — revealing main page')
-        if (loaderRef.current) {
-          loaderRef.current.classList.add('hidden')
-          setTimeout(() => { if (loaderRef.current) loaderRef.current.style.display = 'none' }, 850)
-        }
-        updateHero()
-      }
-    }, 15000)
-
-    const handleFrameLoaded = () => {
-      framesLoadedRef.current++
-      const pct = Math.floor((framesLoadedRef.current / FRAME_COUNT) * 100)
-      
-      const loaderBarFill = document.getElementById('loaderBarFill')
-      const loaderPercentage = document.getElementById('loaderPercentage')
-      if (loaderBarFill) loaderBarFill.style.width = `${pct}%`
-      if (loaderPercentage) loaderPercentage.textContent = `Loading ${pct}%`
-      
-      if (framesLoadedRef.current === FRAME_COUNT) {
-        clearTimeout(safetyTimeout)
-        setTimeout(() => {
-          if (loaderRef.current) {
-            loaderRef.current.classList.add('hidden')
-            setTimeout(() => { if (loaderRef.current) loaderRef.current.style.display = 'none' }, 850)
-          }
-        }, 350)
-        updateHero()
-      }
-    }
-
     if (waveCanvas) {
       waveCtxRef.current = waveCanvas.getContext('2d')
       resizeCanvas()
 
-      // Load frames directly to trigger browser cache
+      // Load frames directly to trigger browser cache in the background
       for (let i = 1; i <= FRAME_COUNT; i++) {
         const img = new Image()
         img.src = FRAME_PATH + String(i).padStart(4, '0') + FRAME_EXT
-        img.onload = handleFrameLoaded
-        img.onerror = handleFrameLoaded
         framesRef.current.push(img)
       }
     }
@@ -771,19 +753,7 @@ export default function PortfolioClient({ settings, about, profilePhotoUrl, proj
   return (
     <>
       {/* Loading Screen */}
-      <div className="loader" id="loader" ref={loaderRef}>
-        <div className="loader-inner">
-          <div className="loader-name">
-            <span className="loader-n">N</span><span className="loader-rest">agendra A.S.</span>
-          </div>
-          <div className="loader-bar">
-            <div className="loader-bar-fill" id="loaderBarFill"></div>
-          </div>
-          <div className="loader-percentage font-mono" id="loaderPercentage" style={{ fontSize: '0.7rem', marginTop: '12px', opacity: 0.6, letterSpacing: '0.1em' }}>
-            0%
-          </div>
-        </div>
-      </div>
+      {loading && <Loader onComplete={handleLoaderComplete} fade={fadeLoader} />}
 
       {/* Ambient cursor canvas */}
       <canvas className="ocean-cursor-canvas" id="oceanCursorCanvas" ref={oceanCanvasRef}></canvas>
