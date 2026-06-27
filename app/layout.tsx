@@ -5,6 +5,11 @@ export const metadata: Metadata = {
   title: 'Nagendra AS — Creative Developer',
   description:
     'Nagendra AS — Computer Science student specializing in AI, Machine Learning, and building innovative digital experiences.',
+  icons: {
+    icon: '/assets/nagslogo.jpeg',
+    shortcut: '/assets/nagslogo.jpeg',
+    apple: '/assets/nagslogo.jpeg',
+  }
 }
 
 import FloatingDockWrapper from '../components/FloatingDockWrapper'
