@@ -1929,12 +1929,22 @@ button {
   justify-content: center !important;
 }
 
+@keyframes fadeUpAbsolute {
+  from {
+    opacity: 0;
+    transform: translateY(calc(-50% + 24px));
+  }
+  to {
+    opacity: 1;
+    transform: translateY(-50%);
+  }
+}
+
 /* â”€â”€ First name: anchored to right edge of left half â”€â”€â”€â”€â”€â”€â”€ */
 .hero-word--first {
-  position: relative !important;
-  right: auto !important;
-  top: auto !important;
-  transform: none !important;
+  position: absolute !important;
+  top: 50% !important;
+  transform: translateY(-50%) !important;
   padding-right: 0 !important;
   margin-right: 0.12em !important;
   font-size: clamp(2rem, 9.5vw, 6.5rem) !important;
@@ -1946,16 +1956,15 @@ button {
   line-height: .9 !important;
   white-space: nowrap !important;
   will-change: transform !important;
-  animation: fadeUp .9s .2s var(--ease-out) both !important;
+  animation: fadeUpAbsolute .9s .2s var(--ease-out) both !important;
   transition: none !important;
 }
 
 /* â”€â”€ Last name: anchored to left edge of right half â”€â”€â”€â”€â”€â”€â”€â”€ */
 .hero-word--last {
-  position: relative !important;
-  left: auto !important;
-  top: auto !important;
-  transform: none !important;
+  position: absolute !important;
+  top: 50% !important;
+  transform: translateY(-50%) !important;
   padding-left: 0 !important;
   font-size: clamp(2rem, 9.5vw, 6.5rem) !important;
   font-family: var(--serif) !important;
@@ -1966,7 +1975,7 @@ button {
   line-height: .9 !important;
   white-space: nowrap !important;
   will-change: transform !important;
-  animation: fadeUp .9s .35s var(--ease-out) both !important;
+  animation: fadeUpAbsolute .9s .35s var(--ease-out) both !important;
   transition: none !important;
 }
 
