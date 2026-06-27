@@ -15,7 +15,8 @@ export const siteSettingsQuery = groq`
     contactSubhead,
     avgResponse,
     location,
-    openTo
+    openTo,
+    favicon
   }
 `
 

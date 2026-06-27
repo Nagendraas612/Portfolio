@@ -89,6 +89,15 @@ export default defineType({
       type: 'array',
       of: [{ type: 'string' }],
     }),
+    defineField({
+      name: 'favicon',
+      title: 'Favicon Image',
+      description: 'Upload your square favicon logo image (will override the default nagslogo.jpeg)',
+      type: 'image',
+      options: {
+        hotspot: true,
+      },
+    }),
   ],
   preview: {
     select: { title: 'name' },

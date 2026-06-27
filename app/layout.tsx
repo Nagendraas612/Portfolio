@@ -1,14 +1,31 @@
 import type { Metadata } from 'next'
+import { client, urlFor } from '../sanity/lib/client'
+import { siteSettingsQuery } from '../sanity/lib/queries'
 import './globals.css'
 
-export const metadata: Metadata = {
-  title: 'Nagendra AS — Creative Developer',
-  description:
-    'Nagendra AS — Computer Science student specializing in AI, Machine Learning, and building innovative digital experiences.',
-  icons: {
-    icon: '/assets/nagslogo.jpeg',
-    shortcut: '/assets/nagslogo.jpeg',
-    apple: '/assets/nagslogo.jpeg',
+export async function generateMetadata(): Promise<Metadata> {
+  let settings: any = null
+  try {
+    settings = await client.fetch(siteSettingsQuery)
+  } catch (e) {
+    console.error('Failed to fetch site settings for metadata:', e)
+  }
+
+  const title = settings?.title || 'Nagendra AS — Creative Developer'
+  const description = settings?.metaDescription || 'Nagendra AS — Computer Science student specializing in AI, Machine Learning, and building innovative digital experiences.'
+
+  const iconUrl = settings?.favicon
+    ? urlFor(settings.favicon).width(192).height(192).url()
+    : '/assets/nagslogo.jpeg'
+
+  return {
+    title,
+    description,
+    icons: {
+      icon: iconUrl,
+      shortcut: iconUrl,
+      apple: iconUrl,
+    }
   }
 }
 
