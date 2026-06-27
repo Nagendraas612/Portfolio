@@ -9,8 +9,8 @@ const DOT_SIZE = 14 // px diameter
 const DOT_GAP = 7 // px gap
 const PADDLE_H = 3 // dots tall
 const DURATION = 4000 // ms total
-const BALL_SPD_X = 0.07
-const BALL_SPD_Y = 0.05
+const BALL_SPD_X = 0.045
+const BALL_SPD_Y = 0.032
 
 interface LoaderProps {
   onComplete: () => void
@@ -19,7 +19,6 @@ interface LoaderProps {
 
 export default function Loader({ onComplete, fade }: LoaderProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null)
-  const [pct, setPct] = useState(0)
 
   useEffect(() => {
     const canvas = canvasRef.current
@@ -87,7 +86,7 @@ export default function Loader({ onComplete, fade }: LoaderProps) {
     }
 
     function movePaddles() {
-      const spd = 0.07
+      const spd = 0.045
       const lc = leftY + PADDLE_H / 2
       const rc = rightY + PADDLE_H / 2
       if (ballY > lc + 0.3) leftY = Math.min(ROWS - PADDLE_H, leftY + spd)
@@ -140,7 +139,6 @@ export default function Loader({ onComplete, fade }: LoaderProps) {
       if (!startTime) startTime = ts
       const elapsed = ts - startTime
       const progress = Math.min(100, (elapsed / DURATION) * 100)
-      setPct(Math.round(progress))
 
       movePaddles()
       moveBall()
@@ -149,7 +147,6 @@ export default function Loader({ onComplete, fade }: LoaderProps) {
       if (progress < 100) {
         raf = requestAnimationFrame(loop)
       } else {
-        setPct(100)
         draw()
         setTimeout(onComplete, 300)
       }
@@ -170,57 +167,29 @@ export default function Loader({ onComplete, fade }: LoaderProps) {
         flexDirection: 'column',
         alignItems: 'center',
         justifyContent: 'center',
-        gap: '40px',
         transition: 'opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.8s',
         opacity: fade ? 0 : 1,
         visibility: fade ? 'hidden' : 'visible',
         pointerEvents: fade ? 'none' : 'auto',
       }}
     >
-      {/* Big percentage counter */}
-      <span
-        className="font-serif"
-        style={{
-          fontSize: 'clamp(70px, 14vw, 120px)',
-          fontWeight: 700,
-          color: '#fff',
-          letterSpacing: '-0.04em',
-          fontVariantNumeric: 'tabular-nums',
-          lineHeight: 1,
-        }}
-      >
-        {pct}%
-      </span>
-
-      {/* Dot matrix card */}
       <div
+        className="loader-inner"
         style={{
-          background: 'rgba(13, 23, 33, 0.7)',
-          backdropFilter: 'blur(12px)',
-          WebkitBackdropFilter: 'blur(12px)',
-          border: '1px solid rgba(255, 255, 255, 0.05)',
-          boxShadow: '0 20px 50px rgba(0, 0, 0, 0.4)',
-          borderRadius: '18px',
-          padding: '24px 32px',
           display: 'flex',
+          flexDirection: 'column',
           alignItems: 'center',
           gap: '24px',
         }}
       >
+        {/* Name (with existing CSS animations from globals.css) */}
+        <div className="loader-name" style={{ marginBottom: 0 }}>
+          <span className="loader-n">N</span>
+          <span className="loader-rest">agendra A.S.</span>
+        </div>
+
+        {/* Canvas directly aligned in middle */}
         <canvas ref={canvasRef} />
-        <span
-          className="font-mono"
-          style={{
-            fontSize: '0.85rem',
-            fontWeight: 500,
-            color: '#fff',
-            letterSpacing: '0.15em',
-            textTransform: 'uppercase',
-            opacity: 0.8,
-          }}
-        >
-          Playing
-        </span>
       </div>
     </div>
   )
