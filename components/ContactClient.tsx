@@ -12,6 +12,7 @@ interface SiteSettings {
   avgResponse: string
   location: string
   openTo: string[]
+  footerCopyright?: string
 }
 
 interface Props {
@@ -173,9 +174,7 @@ export default function ContactClient({ settings }: Props) {
       {/* FOOTER */}
       <footer className="global-footer">
         <div className="footer-inner">
-          <div className="home-footer-left">
-            <span className="footer-copy label">© 2026 {settings.name}</span>
-          </div>
+          <span className="footer-copy label">{settings.footerCopyright || `© 2026 ${settings.name}`}</span>
         </div>
       </footer>
     </div>

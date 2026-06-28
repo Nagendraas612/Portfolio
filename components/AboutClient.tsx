@@ -24,6 +24,7 @@ interface SkillCategory {
 interface SiteSettings {
   name: string
   email: string
+  footerCopyright?: string
 }
 
 interface Props {
@@ -160,9 +161,7 @@ export default function AboutClient({ about, skills, profilePhotoUrl, settings }
       {/* FOOTER */}
       <footer className="global-footer">
         <div className="footer-inner">
-          <div className="home-footer-left">
-            <span className="footer-copy label">© 2026 {settings.name}</span>
-          </div>
+          <span className="footer-copy label">{settings.footerCopyright || `© 2026 ${settings.name}`}</span>
         </div>
       </footer>
     </div>

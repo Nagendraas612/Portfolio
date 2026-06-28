@@ -22,6 +22,7 @@ interface SiteSettings {
   avgResponse: string
   location: string
   openTo: string[]
+  footerCopyright?: string
 }
 
 interface About {
@@ -815,11 +816,6 @@ export default function PortfolioClient({ settings, about, profilePhotoUrl, proj
                 }
               </p>
             </div>
-            <div className="hero-bottom-bar reveal-instant">
-              <div className="hbb-left">
-                <span>→ V1.0</span>
-              </div>
-            </div>
           </div>
         </div>
       </section>
@@ -1049,13 +1045,7 @@ export default function PortfolioClient({ settings, about, profilePhotoUrl, proj
       {/* FOOTER */}
       <footer className="global-footer">
         <div className="footer-inner">
-          <div className="home-footer-left">
-            {s.githubUrl && <a href={s.githubUrl} target="_blank" rel="noopener" className="footer-link">GitHub ↗</a>}
-            {s.linkedinUrl && <a href={s.linkedinUrl} target="_blank" rel="noopener" className="footer-link">LinkedIn ↗</a>}
-          </div>
-          <div className="home-footer-right">
-            <span className="footer-copy label">© 2026 {s.name}</span>
-          </div>
+          <span className="footer-copy label">{s.footerCopyright || `© 2026 ${s.name}`}</span>
         </div>
       </footer>
 

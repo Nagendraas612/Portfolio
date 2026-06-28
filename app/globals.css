@@ -1636,7 +1636,7 @@ button {
 
 .footer-inner {
   display: flex;
-  justify-content: space-between;
+  justify-content: center; /* Center footer text horizontally */
   align-items: center;
   max-width: var(--max);
   margin: 0 auto;

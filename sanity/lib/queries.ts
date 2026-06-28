@@ -21,7 +21,8 @@ export const siteSettingsQuery = groq`
     dockWorkUrl,
     dockEmail,
     dockLinkedinUrl,
-    dockGithubUrl
+    dockGithubUrl,
+    footerCopyright
   }
 `
 

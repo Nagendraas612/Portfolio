@@ -27,6 +27,7 @@ interface ProjectWithUrl {
 
 interface SiteSettings {
   name: string
+  footerCopyright?: string
 }
 
 interface Props {
@@ -224,9 +225,7 @@ export default function WorkClient({ projects, settings }: Props) {
       {/* FOOTER */}
       <footer className="global-footer">
         <div className="footer-inner">
-          <div className="home-footer-left">
-            <span className="footer-copy label">© 2026 {settings.name}</span>
-          </div>
+          <span className="footer-copy label">{settings.footerCopyright || `© 2026 ${settings.name}`}</span>
         </div>
       </footer>
 

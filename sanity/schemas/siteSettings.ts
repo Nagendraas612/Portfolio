@@ -133,6 +133,13 @@ export default defineType({
       type: 'string',
       initialValue: 'https://github.com/Nagendraas612',
     }),
+    defineField({
+      name: 'footerCopyright',
+      title: 'Footer Copyright Text',
+      description: 'The copyright text shown at the bottom of the page (e.g. © 2026 Nagendra AS)',
+      type: 'string',
+      initialValue: '© 2026 Nagendra AS',
+    }),
   ],
   preview: {
     select: { title: 'name' },
