@@ -738,7 +738,7 @@ button {
   z-index: 1;
   max-width: 400px; /* Limit photo size on laptops/desktops */
   width: 100%;
-  justify-self: end; /* Push to the right side of the layout */
+  justify-self: center; /* Center-align inside its grid column to avoid colliding with right timeline */
 }
 
 .info-photo-area::before {
