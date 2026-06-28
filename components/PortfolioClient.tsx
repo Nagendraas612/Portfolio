@@ -1036,24 +1036,24 @@ export default function PortfolioClient({ settings, about, profilePhotoUrl, proj
               </div>
               <div className="contact-col reveal reveal-delay-2">
                 <h4 className="contact-col-title label">{s.contactWorkDetailsTitle || "WORK DETAILS"}</h4>
-                <div className="contact-response-card">
-                  <div className="crm-row">
-                    <span className="label">{s.contactWorkModeLabel || "WORK MODE"}</span>
-                    <strong>{s.contactWorkModeValue || "Remote"}</strong>
-                  </div>
-                  <div className="crm-row">
-                    <span className="label">{s.contactCollabLabel || "COLLABORATION"}</span>
-                    <strong>{s.contactCollabValue || "Open Worldwide"}</strong>
-                  </div>
-                  <div className="crm-row">
-                    <span className="label">{s.contactBasedInLabel || "BASED IN"}</span>
+                <ul className="contact-work-details-list">
+                  <li className="crm-row-flat">
+                    <span className="contact-info-label label">{s.contactWorkModeLabel || "WORK MODE"}</span>
+                    <strong className="contact-info-value">{s.contactWorkModeValue || "Remote"}</strong>
+                  </li>
+                  <li className="crm-row-flat">
+                    <span className="contact-info-label label">{s.contactCollabLabel || "COLLABORATION"}</span>
+                    <strong className="contact-info-value">{s.contactCollabValue || "Open Worldwide"}</strong>
+                  </li>
+                  <li className="crm-row-flat">
+                    <span className="contact-info-label label">{s.contactBasedInLabel || "BASED IN"}</span>
                     {s.contactShowStatusDot ? (
                       <span className="avail-green"><span className="avail-dot"></span>{s.contactBasedInValue || "Mysuru, India"}</span>
                     ) : (
-                      <strong>{s.contactBasedInValue || "Mysuru, India"}</strong>
+                      <strong className="contact-info-value">{s.contactBasedInValue || "Mysuru, India"}</strong>
                     )}
-                  </div>
-                </div>
+                  </li>
+                </ul>
               </div>
             </div>
           </div>

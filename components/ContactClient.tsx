@@ -159,24 +159,24 @@ export default function ContactClient({ settings }: Props) {
               </div>
               <div className="contact-col reveal reveal-delay-2">
                 <h4 className="contact-col-title label">{settings.contactWorkDetailsTitle || "WORK DETAILS"}</h4>
-                <div className="contact-response-card">
-                  <div className="crm-row">
-                    <span className="label">{settings.contactWorkModeLabel || "WORK MODE"}</span>
-                    <strong>{settings.contactWorkModeValue || "Remote"}</strong>
-                  </div>
-                  <div className="crm-row">
-                    <span className="label">{settings.contactCollabLabel || "COLLABORATION"}</span>
-                    <strong>{settings.contactCollabValue || "Open Worldwide"}</strong>
-                  </div>
-                  <div className="crm-row">
-                    <span className="label">{settings.contactBasedInLabel || "BASED IN"}</span>
+                <ul className="contact-work-details-list">
+                  <li className="crm-row-flat">
+                    <span className="contact-info-label label">{settings.contactWorkModeLabel || "WORK MODE"}</span>
+                    <strong className="contact-info-value">{settings.contactWorkModeValue || "Remote"}</strong>
+                  </li>
+                  <li className="crm-row-flat">
+                    <span className="contact-info-label label">{settings.contactCollabLabel || "COLLABORATION"}</span>
+                    <strong className="contact-info-value">{settings.contactCollabValue || "Open Worldwide"}</strong>
+                  </li>
+                  <li className="crm-row-flat">
+                    <span className="contact-info-label label">{settings.contactBasedInLabel || "BASED IN"}</span>
                     {settings.contactShowStatusDot ? (
                       <span className="avail-green"><span className="avail-dot"></span>{settings.contactBasedInValue || "Mysuru, India"}</span>
                     ) : (
-                      <strong>{settings.contactBasedInValue || "Mysuru, India"}</strong>
+                      <strong className="contact-info-value">{settings.contactBasedInValue || "Mysuru, India"}</strong>
                     )}
-                  </div>
-                </div>
+                  </li>
+                </ul>
               </div>
             </div>
           </div>
