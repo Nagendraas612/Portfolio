@@ -104,6 +104,7 @@ export default defineType({
       description: 'The link or route for the About icon in the floating dock (defaults to /about)',
       type: 'string',
       initialValue: '/about',
+      placeholder: '/about',
     }),
     defineField({
       name: 'dockWorkUrl',
@@ -111,6 +112,7 @@ export default defineType({
       description: 'The link or route for the Work icon in the floating dock (defaults to /work)',
       type: 'string',
       initialValue: '/work',
+      placeholder: '/work',
     }),
     defineField({
       name: 'dockEmail',
@@ -118,6 +120,7 @@ export default defineType({
       description: 'The email address for the Email icon in the floating dock (e.g. nagias612@gmail.com)',
       type: 'string',
       initialValue: 'nagias612@gmail.com',
+      placeholder: 'nagias612@gmail.com',
     }),
     defineField({
       name: 'dockLinkedinUrl',
@@ -125,6 +128,7 @@ export default defineType({
       description: 'The URL for the LinkedIn icon in the floating dock (e.g. https://linkedin.com/in/nagendraas612)',
       type: 'string',
       initialValue: 'https://linkedin.com/in/nagendraas612',
+      placeholder: 'https://linkedin.com/in/nagendraas612',
     }),
     defineField({
       name: 'dockGithubUrl',
@@ -132,6 +136,7 @@ export default defineType({
       description: 'The URL for the GitHub icon in the floating dock (e.g. https://github.com/Nagendraas612)',
       type: 'string',
       initialValue: 'https://github.com/Nagendraas612',
+      placeholder: 'https://github.com/Nagendraas612',
     }),
     defineField({
       name: 'footerCopyright',
@@ -139,6 +144,7 @@ export default defineType({
       description: 'The copyright text shown at the bottom of the page (e.g. © 2026 Nagendra AS)',
       type: 'string',
       initialValue: '© 2026 Nagendra AS',
+      placeholder: '© 2026 Nagendra AS',
     }),
   ],
   preview: {
