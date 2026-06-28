@@ -987,12 +987,6 @@ export default function PortfolioClient({ settings, about, profilePhotoUrl, proj
                 )}
               </h2>
               <p className="contact-subhead"><ScrollRevealPlain text={s.contactSubhead} isStatic={false} /></p>
-              <a href={`mailto:${s.email}`} className="contact-email-btn">
-                <span>{s.email}</span>
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
-                  <path d="M7 17L17 7M17 7H7M17 7v10" />
-                </svg>
-              </a>
             </div>
             <div className="contact-grid">
               <div className="contact-col reveal">

@@ -16,7 +16,12 @@ export const siteSettingsQuery = groq`
     avgResponse,
     location,
     openTo,
-    favicon
+    favicon,
+    dockAboutUrl,
+    dockWorkUrl,
+    dockEmail,
+    dockLinkedinUrl,
+    dockGithubUrl
   }
 `
 

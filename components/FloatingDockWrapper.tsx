@@ -4,7 +4,20 @@ import { usePathname, useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import Dock, { DockItemData } from './Dock';
 
-export default function FloatingDockWrapper() {
+interface FloatingDockWrapperProps {
+  settings?: {
+    email?: string;
+    linkedinUrl?: string;
+    githubUrl?: string;
+    dockAboutUrl?: string;
+    dockWorkUrl?: string;
+    dockEmail?: string;
+    dockLinkedinUrl?: string;
+    dockGithubUrl?: string;
+  };
+}
+
+export default function FloatingDockWrapper({ settings }: FloatingDockWrapperProps) {
   const pathname = usePathname();
   const router = useRouter();
   const [opacity, setOpacity] = useState(1);
@@ -71,7 +84,7 @@ export default function FloatingDockWrapper() {
       ),
       onClick: () => {
         const fakeEvent = { preventDefault: () => {} } as React.MouseEvent;
-        handleNavClick(fakeEvent, '/about');
+        handleNavClick(fakeEvent, settings?.dockAboutUrl || '/about');
       }
     },
     {
@@ -84,7 +97,7 @@ export default function FloatingDockWrapper() {
       ),
       onClick: () => {
         const fakeEvent = { preventDefault: () => {} } as React.MouseEvent;
-        handleNavClick(fakeEvent, '/work');
+        handleNavClick(fakeEvent, settings?.dockWorkUrl || '/work');
       }
     },
     {
@@ -96,7 +109,8 @@ export default function FloatingDockWrapper() {
         </svg>
       ),
       onClick: () => {
-        window.location.href = 'mailto:nagendraas612@gmail.com';
+        const emailVal = settings?.dockEmail || settings?.email || 'nagias612@gmail.com';
+        window.location.href = `mailto:${emailVal}`;
       }
     },
     {
@@ -109,7 +123,8 @@ export default function FloatingDockWrapper() {
         </svg>
       ),
       onClick: () => {
-        window.open('https://linkedin.com/in/nagendraas612', '_blank', 'noopener,noreferrer');
+        const linkedinVal = settings?.dockLinkedinUrl || settings?.linkedinUrl || 'https://linkedin.com/in/nagendraas612';
+        window.open(linkedinVal, '_blank', 'noopener,noreferrer');
       }
     },
     {
@@ -120,7 +135,8 @@ export default function FloatingDockWrapper() {
         </svg>
       ),
       onClick: () => {
-        window.open('https://github.com/Nagendraas612', '_blank', 'noopener,noreferrer');
+        const githubVal = settings?.dockGithubUrl || settings?.githubUrl || 'https://github.com/Nagendraas612';
+        window.open(githubVal, '_blank', 'noopener,noreferrer');
       }
     }
   ];

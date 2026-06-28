@@ -111,12 +111,6 @@ export default function ContactClient({ settings }: Props) {
                 )}
               </h2>
               <p className="contact-subhead"><ScrollRevealPlain text={settings.contactSubhead} isStatic={false} /></p>
-              <a href={`mailto:${settings.email}`} className="contact-email-btn">
-                <span>{settings.email}</span>
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
-                  <path d="M7 17L17 7M17 7H7M17 7v10" />
-                </svg>
-              </a>
             </div>
             <div className="contact-grid">
               <div className="contact-col reveal">

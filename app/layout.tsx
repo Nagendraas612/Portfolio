@@ -31,11 +31,18 @@ export async function generateMetadata(): Promise<Metadata> {
 
 import FloatingDockWrapper from '../components/FloatingDockWrapper'
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode
 }) {
+  let settings: any = null
+  try {
+    settings = await client.fetch(siteSettingsQuery)
+  } catch (e) {
+    console.error('Failed to fetch site settings for layout:', e)
+  }
+
   return (
     <html lang="en">
       <head>
@@ -48,7 +55,7 @@ export default function RootLayout({
       </head>
       <body>
         {children}
-        <FloatingDockWrapper />
+        <FloatingDockWrapper settings={settings} />
       </body>
     </html>
   )
