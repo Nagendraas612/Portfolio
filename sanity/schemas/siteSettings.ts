@@ -90,6 +90,22 @@ export default defineType({
       of: [{ type: 'string' }],
     }),
     defineField({
+      name: 'skillsHeadline',
+      title: 'Capabilities Section Headline',
+      description: 'The description at the start of capabilities/skills section, e.g. "Tools and technologies I use to bring ideas to life — from intelligent systems to polished interfaces."',
+      type: 'string',
+      initialValue: 'Tools and technologies I use to bring ideas to life — from intelligent systems to polished interfaces.',
+      placeholder: 'Tools and technologies I use to bring ideas to life — from intelligent systems to polished interfaces.',
+    }),
+    defineField({
+      name: 'skillsHeadlineEmphasis',
+      title: 'Capabilities Headline Emphasis Word',
+      description: 'The exact word/phrase in capabilities headline to highlight in cyan (e.g. "intelligent systems")',
+      type: 'string',
+      initialValue: 'intelligent systems',
+      placeholder: 'intelligent systems',
+    }),
+    defineField({
       name: 'favicon',
       title: 'Favicon Image',
       description: 'Upload your square favicon logo image (will override the default nagslogo.jpeg)',

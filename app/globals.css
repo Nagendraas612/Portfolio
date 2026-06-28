@@ -705,7 +705,7 @@ button {
 .scroll-section {
   position: relative;
   background: var(--bg);
-  padding: var(--s7) 0;
+  padding: var(--s5) 0; /* Reduced padding from --s7 (7rem) to --s5 (3rem) to optimize spacing */
 }
 
 .section-inner {
@@ -718,7 +718,7 @@ button {
   display: flex;
   align-items: center;
   gap: var(--s3);
-  margin-bottom: var(--s6);
+  margin-bottom: var(--s4); /* Reduced from --s6 to --s4 for tighter vertical rhythm */
 }
 
 .section-line {

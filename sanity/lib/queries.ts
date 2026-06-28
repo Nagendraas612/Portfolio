@@ -22,7 +22,9 @@ export const siteSettingsQuery = groq`
     dockEmail,
     dockLinkedinUrl,
     dockGithubUrl,
-    footerCopyright
+    footerCopyright,
+    skillsHeadline,
+    skillsHeadlineEmphasis
   }
 `
 

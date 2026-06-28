@@ -23,6 +23,8 @@ interface SiteSettings {
   location: string
   openTo: string[]
   footerCopyright?: string
+  skillsHeadline?: string
+  skillsHeadlineEmphasis?: string
 }
 
 interface About {
@@ -941,7 +943,11 @@ export default function PortfolioClient({ settings, about, profilePhotoUrl, proj
           <div className="skills-layout">
             <div className="skills-intro reveal scroll-text-block">
               <p className="skills-intro-text">
-                <ScrollRevealText text="Tools and technologies I use to bring ideas to life — from intelligent systems to polished interfaces." emphasis="intelligent systems" isStatic={false} />
+                <ScrollRevealText 
+                  text={s.skillsHeadline || "Tools and technologies I use to bring ideas to life — from intelligent systems to polished interfaces."} 
+                  emphasis={s.skillsHeadlineEmphasis || "intelligent systems"} 
+                  isStatic={false} 
+                />
               </p>
             </div>
             <div className="skills-grid">

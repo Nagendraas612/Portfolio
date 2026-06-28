@@ -25,6 +25,8 @@ interface SiteSettings {
   name: string
   email: string
   footerCopyright?: string
+  skillsHeadline?: string
+  skillsHeadlineEmphasis?: string
 }
 
 interface Props {
@@ -141,7 +143,11 @@ export default function AboutClient({ about, skills, profilePhotoUrl, settings }
           <div className="skills-layout">
             <div className="skills-intro reveal scroll-text-block">
               <p className="skills-intro-text">
-                <ScrollRevealText text="Tools and technologies I use to bring ideas to life — from intelligent systems to polished interfaces." emphasis="intelligent systems" isStatic={false} />
+                <ScrollRevealText 
+                  text={settings.skillsHeadline || "Tools and technologies I use to bring ideas to life — from intelligent systems to polished interfaces."} 
+                  emphasis={settings.skillsHeadlineEmphasis || "intelligent systems"} 
+                  isStatic={false} 
+                />
               </p>
             </div>
             <div className="skills-grid">
