@@ -218,9 +218,19 @@ export default function WorkClient({ projects, settings }: Props) {
                       ))}
                     </div>
                     {proj.deployedUrl && (
-                      <a href={proj.deployedUrl} target="_blank" rel="noopener noreferrer" className="details-link-btn">
-                        Visit Deployed App <span className="details-arrow">↗</span>
-                      </a>
+                      <div className="details-action-group">
+                        <a href={proj.deployedUrl} target="_blank" rel="noopener noreferrer" className="details-link-btn">
+                          Visit Deployed App <span className="details-arrow">↗</span>
+                        </a>
+                        {proj.deployedUrl.includes('onrender.com') && (
+                          <div className="render-coldstart-notice">
+                            <span className="coldstart-pulse"></span>
+                            <span className="coldstart-text">
+                              This demo is hosted on a free server tier. It may take 30-60 seconds to spin up on the first load.
+                            </span>
+                          </div>
+                        )}
+                      </div>
                     )}
                   </div>
                 </div>

@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 
 interface SiteSettings {
   name: string
@@ -30,6 +30,55 @@ interface Props {
 import { ScrollRevealPlain, ScrollRevealText } from './ScrollReveal'
 
 export default function ContactClient({ settings }: Props) {
+  // Contact Form State
+  const [formName, setFormName] = useState('')
+  const [formEmail, setFormEmail] = useState('')
+  const [formMessage, setFormMessage] = useState('')
+  const [formStatus, setFormStatus] = useState<'idle' | 'submitting' | 'success' | 'error'>('idle')
+  const [formError, setFormError] = useState('')
+
+  const handleFormSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
+    if (!formName.trim() || !formEmail.trim() || !formMessage.trim()) {
+      setFormStatus('error')
+      setFormError('All fields are required.')
+      return
+    }
+    if (!formEmail.includes('@')) {
+      setFormStatus('error')
+      setFormError('Please enter a valid email address.')
+      return
+    }
+
+    setFormStatus('submitting')
+    setFormError('')
+
+    try {
+      const res = await fetch('/api/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: formName,
+          email: formEmail,
+          message: formMessage,
+        }),
+      })
+
+      const data = await res.json()
+      if (!res.ok) {
+        throw new Error(data.error || 'Failed to submit message.')
+      }
+
+      setFormStatus('success')
+      setFormName('')
+      setFormEmail('')
+      setFormMessage('')
+    } catch (err: any) {
+      setFormStatus('error')
+      setFormError(err.message || 'Something went wrong. Please try again.')
+    }
+  }
+
   useEffect(() => {
     // ─── Scroll reveal observer ───
     const obs = new IntersectionObserver(
@@ -97,95 +146,85 @@ export default function ContactClient({ settings }: Props) {
 
       {/* CONTACT */}
       <section className="scroll-section" id="section-contact">
-        <div className="section-inner">
-          <div className="section-eyebrow reveal">
-            <span className="label">Get in touch</span>
-            <span className="section-line"></span>
-          </div>
-          <div className="contact-body">
-            <div className="contact-headline reveal">
-              <h2 className="contact-big">
-                {settings.contactHeadline?.includes('\n') ? (
-                  <>
-                    <ScrollRevealPlain text={settings.contactHeadline.split('\n')[0]} isStatic={false} />
-                    <br />
-                    <ScrollRevealText text={settings.contactHeadline.split('\n')[1]} emphasis={settings.contactHeadline.split('\n')[1]} isStatic={false} />
-                  </>
-                ) : (
-                  <>
-                    <ScrollRevealPlain text="Let's build" isStatic={false} />
-                    <br />
-                    <ScrollRevealText text="something great." emphasis="something great." isStatic={false} />
-                  </>
+        <div className="section-inner contact-page-inner">
+          <div className="contact-form-wrapper reveal">
+            <h2 className="contact-form-title font-serif">Drop a Message</h2>
+            <p className="contact-form-subtitle font-mono">Let's build something great together</p>
+            <form onSubmit={handleFormSubmit} className="contact-form">
+              <div className="form-group">
+                <label htmlFor="contact-name" className="form-label label">Name</label>
+                <input
+                  type="text"
+                  id="contact-name"
+                  value={formName}
+                  onChange={(e) => setFormName(e.target.value)}
+                  placeholder="Your name"
+                  className="form-input"
+                  disabled={formStatus === 'submitting'}
+                  required
+                />
+              </div>
+              <div className="form-group">
+                <label htmlFor="contact-email" className="form-label label">Email</label>
+                <input
+                  type="email"
+                  id="contact-email"
+                  value={formEmail}
+                  onChange={(e) => setFormEmail(e.target.value)}
+                  placeholder="Your email address"
+                  className="form-input"
+                  disabled={formStatus === 'submitting'}
+                  required
+                />
+              </div>
+              <div className="form-group">
+                <label htmlFor="contact-message" className="form-label label">Message</label>
+                <textarea
+                  id="contact-message"
+                  value={formMessage}
+                  onChange={(e) => setFormMessage(e.target.value)}
+                  placeholder="Tell me about your project, role, or ideas..."
+                  className="form-textarea"
+                  rows={5}
+                  disabled={formStatus === 'submitting'}
+                  required
+                />
+              </div>
+              
+              {formStatus === 'error' && (
+                <div className="form-feedback error-feedback font-mono">
+                  <span className="feedback-icon">⚠️</span> {formError}
+                </div>
+              )}
+              
+              {formStatus === 'success' && (
+                <div className="form-feedback success-feedback font-mono">
+                  <span className="feedback-icon">✓</span> Message sent successfully! I will get back to you shortly.
+                </div>
+              )}
+
+              <button
+                type="submit"
+                disabled={formStatus === 'submitting'}
+                className={`form-submit-btn ${formStatus === 'submitting' ? 'submitting' : ''}`}
+              >
+                <span className="btn-text">
+                  {formStatus === 'submitting' ? 'Sending...' : 'Send Message'}
+                </span>
+                {formStatus !== 'submitting' && (
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="btn-icon">
+                    <path d="M7 17L17 7M17 7H7M17 7v10" />
+                  </svg>
                 )}
-              </h2>
-              <p className="contact-subhead"><ScrollRevealPlain text={settings.contactSubhead} isStatic={false} /></p>
-            </div>
-            <div className="contact-grid">
-              <div className="contact-col reveal">
-                <h4 className="contact-col-title label">Find me at</h4>
-                <ul>
-                  <li>
-                    <a href={`mailto:${settings.email}`} className="contact-item-link">
-                      <span>Email</span>
-                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M7 17L17 7M17 7H7M17 7v10" /></svg>
-                    </a>
-                  </li>
-                  {settings.linkedinUrl && (
-                    <li>
-                      <a href={settings.linkedinUrl} target="_blank" rel="noopener noreferrer" className="contact-item-link">
-                        <span>LinkedIn</span>
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M7 17L17 7M17 7H7M17 7v10" /></svg>
-                      </a>
-                    </li>
-                  )}
-                  {settings.githubUrl && (
-                    <li>
-                      <a href={settings.githubUrl} target="_blank" rel="noopener noreferrer" className="contact-item-link">
-                        <span>GitHub</span>
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M7 17L17 7M17 7H7M17 7v10" /></svg>
-                      </a>
-                    </li>
-                  )}
-                </ul>
-              </div>
-              <div className="contact-col reveal reveal-delay-1">
-                <h4 className="contact-col-title label">Open to</h4>
-                <ul>
-                  {settings.openTo?.map((item, i) => (
-                    <li key={i}><span className="contact-interest">{item}</span></li>
-                  ))}
-                </ul>
-              </div>
-              <div className="contact-col reveal reveal-delay-2">
-                <h4 className="contact-col-title label">{settings.contactWorkDetailsTitle || "WORK DETAILS"}</h4>
-                <ul className="contact-work-details-list">
-                  <li className="crm-row-flat">
-                    <span className="contact-info-label label">{settings.contactWorkModeLabel || "WORK MODE"}</span>
-                    <strong className="contact-info-value">{settings.contactWorkModeValue || "Remote"}</strong>
-                  </li>
-                  <li className="crm-row-flat">
-                    <span className="contact-info-label label">{settings.contactCollabLabel || "COLLABORATION"}</span>
-                    <strong className="contact-info-value">{settings.contactCollabValue || "Open Worldwide"}</strong>
-                  </li>
-                  <li className="crm-row-flat">
-                    <span className="contact-info-label label">{settings.contactBasedInLabel || "BASED IN"}</span>
-                    {settings.contactShowStatusDot ? (
-                      <span className="avail-green"><span className="avail-dot"></span>{settings.contactBasedInValue || "Mysuru, India"}</span>
-                    ) : (
-                      <strong className="contact-info-value">{settings.contactBasedInValue || "Mysuru, India"}</strong>
-                    )}
-                  </li>
-                </ul>
-              </div>
-            </div>
+              </button>
+            </form>
           </div>
         </div>
       </section>
 
       {/* FOOTER */}
       <footer className="global-footer">
-        <div className="footer-inner">
+        <div className="footer-inner" style={{ justifyContent: 'center' }}>
           <span className="footer-copy label">{settings.footerCopyright || `© 2026 ${settings.name}`}</span>
         </div>
       </footer>

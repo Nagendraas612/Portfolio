@@ -258,6 +258,8 @@ export default function PortfolioClient({ settings, about, profilePhotoUrl, proj
   const [loading, setLoading] = useState(true)
   const [fadeLoader, setFadeLoader] = useState(false)
 
+
+
   useEffect(() => {
     if (typeof window !== 'undefined' && sessionStorage.getItem('loaded')) {
       setLoading(false)
@@ -929,9 +931,19 @@ export default function PortfolioClient({ settings, about, profilePhotoUrl, proj
                       ))}
                     </div>
                     {proj.deployedUrl && (
-                      <a href={proj.deployedUrl} target="_blank" rel="noopener noreferrer" className="details-link-btn">
-                        Visit Deployed App <span className="details-arrow">↗</span>
-                      </a>
+                      <div className="details-action-group">
+                        <a href={proj.deployedUrl} target="_blank" rel="noopener noreferrer" className="details-link-btn">
+                          Visit Deployed App <span className="details-arrow">↗</span>
+                        </a>
+                        {proj.deployedUrl.includes('onrender.com') && (
+                          <div className="render-coldstart-notice">
+                            <span className="coldstart-pulse"></span>
+                            <span className="coldstart-text">
+                              This demo is hosted on a free server tier. It may take 30-60 seconds to spin up on the first load.
+                            </span>
+                          </div>
+                        )}
+                      </div>
                     )}
                   </div>
                 </div>
@@ -1063,6 +1075,9 @@ export default function PortfolioClient({ settings, about, profilePhotoUrl, proj
       {/* FOOTER */}
       <footer className="global-footer">
         <div className="footer-inner">
+          <a href="/contact" className="footer-quick-message label font-mono">
+            [ Quick Message ]
+          </a>
           <span className="footer-copy label">{s.footerCopyright || `© 2026 ${s.name}`}</span>
         </div>
       </footer>
