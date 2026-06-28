@@ -931,7 +931,8 @@ button {
   font-weight: 400;
   line-height: 1.7;
   color: var(--text-2);
-  max-width: 620px;
+  max-width: 580px;
+  margin-left: 15%; /* Shift to the right side on desktop */
 }
 
 .info-bio em {
@@ -1754,6 +1755,10 @@ button {
   .info-photo-area {
     max-width: 320px;
     margin: var(--s4) auto 0 auto;
+  }
+
+  .info-bio {
+    margin-left: 0;
   }
 
   .skills-grid {
