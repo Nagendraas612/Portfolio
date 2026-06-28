@@ -728,14 +728,17 @@ button {
 /* ─── ABOUT SECTION ───────────────────────────────────────── */
 .about-layout {
   display: grid;
-  grid-template-columns: 1.25fr 1fr;
+  grid-template-columns: 1.15fr 1fr;
   gap: var(--s6);
-  align-items: start;
+  align-items: center; /* Vertically center content to eliminate ugly bottom gaps */
 }
 
 .info-photo-area {
   position: relative;
   z-index: 1;
+  max-width: 400px; /* Limit photo size on laptops/desktops */
+  width: 100%;
+  justify-self: end; /* Push to the right side of the layout */
 }
 
 .info-photo-area::before {

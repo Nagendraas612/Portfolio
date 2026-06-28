@@ -848,26 +848,6 @@ export default function PortfolioClient({ settings, about, profilePhotoUrl, proj
                 <div className="info-photo-corner bl"></div>
                 <div className="info-photo-corner br"></div>
               </div>
-              <div className="info-status">
-                <div className="info-status-row">
-                  <span className="info-status-label label">Based in</span>
-                  <span className="info-status-value">{a.basedIn}</span>
-                </div>
-                <div className="info-status-row">
-                  <span className="info-status-label label">Status</span>
-                  <span className="info-status-value availability-badge">
-                    <span className="avail-dot"></span>{a.status}
-                  </span>
-                </div>
-                <div className="info-status-row">
-                  <span className="info-status-label label">Education</span>
-                  <span className="info-status-value">{a.education}</span>
-                </div>
-                <div className="info-status-row">
-                  <span className="info-status-label label">Focus</span>
-                  <span className="info-status-value">{a.focus}</span>
-                </div>
-              </div>
             </div>
           </div>
         </div>

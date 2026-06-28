@@ -92,26 +92,6 @@ export default function AboutClient({ about, skills, profilePhotoUrl, settings }
                 <div className="info-photo-corner bl"></div>
                 <div className="info-photo-corner br"></div>
               </div>
-              <div className="info-status">
-                <div className="info-status-row">
-                  <span className="info-status-label label">Based in</span>
-                  <span className="info-status-value">{about.basedIn}</span>
-                </div>
-                <div className="info-status-row">
-                  <span className="info-status-label label">Status</span>
-                  <span className="info-status-value availability-badge">
-                    <span className="avail-dot"></span>{about.status}
-                  </span>
-                </div>
-                <div className="info-status-row">
-                  <span className="info-status-label label">Education</span>
-                  <span className="info-status-value">{about.education}</span>
-                </div>
-                <div className="info-status-row">
-                  <span className="info-status-label label">Focus</span>
-                  <span className="info-status-value">{about.focus}</span>
-                </div>
-              </div>
             </div>
           </div>
         </div>
