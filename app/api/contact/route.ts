@@ -34,6 +34,22 @@ export async function POST(req: NextRequest) {
       createdAt: new Date().toISOString(),
     })
 
+    // 3. Send Push Notification via ntfy
+    try {
+      const topic = process.env.NEXT_PUBLIC_NTFY_TOPIC || 'nagendra-portfolio-msgs-612'
+      await fetch(`https://ntfy.sh/${topic}`, {
+        method: 'POST',
+        headers: {
+          'Title': `New message from ${name.trim()}`,
+          'Tags': 'incoming_envelope,speech_balloon',
+          'Click': `mailto:${email.trim()}`,
+        },
+        body: `Email: ${email.trim()}\n\nMessage:\n${message.trim()}`
+      })
+    } catch (ntfyError) {
+      console.error('Failed to send ntfy push notification:', ntfyError)
+    }
+
     return NextResponse.json({ success: true, docId: doc._id }, { status: 200 })
   } catch (error: any) {
     console.error('Contact form submission error:', error)
