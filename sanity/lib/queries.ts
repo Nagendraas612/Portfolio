@@ -24,7 +24,15 @@ export const siteSettingsQuery = groq`
     dockGithubUrl,
     footerCopyright,
     skillsHeadline,
-    skillsHeadlineEmphasis
+    skillsHeadlineEmphasis,
+    contactWorkDetailsTitle,
+    contactWorkModeLabel,
+    contactWorkModeValue,
+    contactCollabLabel,
+    contactCollabValue,
+    contactBasedInLabel,
+    contactBasedInValue,
+    contactShowStatusDot
   }
 `
 

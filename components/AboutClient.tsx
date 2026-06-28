@@ -27,6 +27,14 @@ interface SiteSettings {
   footerCopyright?: string
   skillsHeadline?: string
   skillsHeadlineEmphasis?: string
+  contactWorkDetailsTitle?: string
+  contactWorkModeLabel?: string
+  contactWorkModeValue?: string
+  contactCollabLabel?: string
+  contactCollabValue?: string
+  contactBasedInLabel?: string
+  contactBasedInValue?: string
+  contactShowStatusDot?: boolean
 }
 
 interface Props {

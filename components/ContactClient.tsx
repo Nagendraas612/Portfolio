@@ -13,6 +13,14 @@ interface SiteSettings {
   location: string
   openTo: string[]
   footerCopyright?: string
+  contactWorkDetailsTitle?: string
+  contactWorkModeLabel?: string
+  contactWorkModeValue?: string
+  contactCollabLabel?: string
+  contactCollabValue?: string
+  contactBasedInLabel?: string
+  contactBasedInValue?: string
+  contactShowStatusDot?: boolean
 }
 
 interface Props {
@@ -150,19 +158,23 @@ export default function ContactClient({ settings }: Props) {
                 </ul>
               </div>
               <div className="contact-col reveal reveal-delay-2">
-                <h4 className="contact-col-title label">Response info</h4>
+                <h4 className="contact-col-title label">{settings.contactWorkDetailsTitle || "WORK DETAILS"}</h4>
                 <div className="contact-response-card">
                   <div className="crm-row">
-                    <span className="label">Avg. response</span>
-                    <strong>{settings.avgResponse}</strong>
+                    <span className="label">{settings.contactWorkModeLabel || "WORK MODE"}</span>
+                    <strong>{settings.contactWorkModeValue || "Remote"}</strong>
                   </div>
                   <div className="crm-row">
-                    <span className="label">Location</span>
-                    <strong>{settings.location}</strong>
+                    <span className="label">{settings.contactCollabLabel || "COLLABORATION"}</span>
+                    <strong>{settings.contactCollabValue || "Open Worldwide"}</strong>
                   </div>
                   <div className="crm-row">
-                    <span className="label">Available</span>
-                    <span className="avail-green"><span className="avail-dot"></span>Now</span>
+                    <span className="label">{settings.contactBasedInLabel || "BASED IN"}</span>
+                    {settings.contactShowStatusDot ? (
+                      <span className="avail-green"><span className="avail-dot"></span>{settings.contactBasedInValue || "Mysuru, India"}</span>
+                    ) : (
+                      <strong>{settings.contactBasedInValue || "Mysuru, India"}</strong>
+                    )}
                   </div>
                 </div>
               </div>

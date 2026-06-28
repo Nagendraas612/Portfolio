@@ -25,6 +25,14 @@ interface SiteSettings {
   footerCopyright?: string
   skillsHeadline?: string
   skillsHeadlineEmphasis?: string
+  contactWorkDetailsTitle?: string
+  contactWorkModeLabel?: string
+  contactWorkModeValue?: string
+  contactCollabLabel?: string
+  contactCollabValue?: string
+  contactBasedInLabel?: string
+  contactBasedInValue?: string
+  contactShowStatusDot?: boolean
 }
 
 interface About {
@@ -1027,19 +1035,23 @@ export default function PortfolioClient({ settings, about, profilePhotoUrl, proj
                 </ul>
               </div>
               <div className="contact-col reveal reveal-delay-2">
-                <h4 className="contact-col-title label">Response info</h4>
+                <h4 className="contact-col-title label">{s.contactWorkDetailsTitle || "WORK DETAILS"}</h4>
                 <div className="contact-response-card">
                   <div className="crm-row">
-                    <span className="label">Avg. response</span>
-                    <strong>{s.avgResponse}</strong>
+                    <span className="label">{s.contactWorkModeLabel || "WORK MODE"}</span>
+                    <strong>{s.contactWorkModeValue || "Remote"}</strong>
                   </div>
                   <div className="crm-row">
-                    <span className="label">Location</span>
-                    <strong>{s.location}</strong>
+                    <span className="label">{s.contactCollabLabel || "COLLABORATION"}</span>
+                    <strong>{s.contactCollabValue || "Open Worldwide"}</strong>
                   </div>
                   <div className="crm-row">
-                    <span className="label">Available</span>
-                    <span className="avail-green"><span className="avail-dot"></span>Now</span>
+                    <span className="label">{s.contactBasedInLabel || "BASED IN"}</span>
+                    {s.contactShowStatusDot ? (
+                      <span className="avail-green"><span className="avail-dot"></span>{s.contactBasedInValue || "Mysuru, India"}</span>
+                    ) : (
+                      <strong>{s.contactBasedInValue || "Mysuru, India"}</strong>
+                    )}
                   </div>
                 </div>
               </div>

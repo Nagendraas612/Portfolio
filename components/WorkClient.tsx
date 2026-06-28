@@ -28,6 +28,14 @@ interface ProjectWithUrl {
 interface SiteSettings {
   name: string
   footerCopyright?: string
+  contactWorkDetailsTitle?: string
+  contactWorkModeLabel?: string
+  contactWorkModeValue?: string
+  contactCollabLabel?: string
+  contactCollabValue?: string
+  contactBasedInLabel?: string
+  contactBasedInValue?: string
+  contactShowStatusDot?: boolean
 }
 
 interface Props {
