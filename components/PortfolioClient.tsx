@@ -948,9 +948,9 @@ export default function PortfolioClient({ settings, about, profilePhotoUrl, proj
                 <ScrollRevealText text="Tools and technologies I use to bring ideas to life — from intelligent systems to polished interfaces." emphasis="intelligent systems" isStatic={false} />
               </p>
             </div>
-            <div className="skills-grid reveal reveal-delay-1">
-              {sk.map((cat) => (
-                <div key={cat._id} className="skill-column">
+            <div className="skills-grid">
+              {sk.map((cat, index) => (
+                <div key={cat._id} className={`skill-column reveal${index > 0 ? ` reveal-delay-${index}` : ''}`}>
                   <h4 className="skill-col-title">{cat.title}</h4>
                   <ul>
                     {cat.skills.map((skill, i) => <li key={i}>{skill}</li>)}
@@ -972,12 +972,19 @@ export default function PortfolioClient({ settings, about, profilePhotoUrl, proj
           <div className="contact-body">
             <div className="contact-headline reveal">
               <h2 className="contact-big">
-                {s.contactHeadline?.includes('\n')
-                  ? <>
-                      {s.contactHeadline.split('\n')[0]}<br /><em>{s.contactHeadline.split('\n')[1]}</em>
-                    </>
-                  : <>Let&apos;s build<br /><em>something great.</em></>
-                }
+                {s.contactHeadline?.includes('\n') ? (
+                  <>
+                    <ScrollRevealPlain text={s.contactHeadline.split('\n')[0]} isStatic={false} />
+                    <br />
+                    <ScrollRevealText text={s.contactHeadline.split('\n')[1]} emphasis={s.contactHeadline.split('\n')[1]} isStatic={false} />
+                  </>
+                ) : (
+                  <>
+                    <ScrollRevealPlain text="Let's build" isStatic={false} />
+                    <br />
+                    <ScrollRevealText text="something great." emphasis="something great." isStatic={false} />
+                  </>
+                )}
               </h2>
               <p className="contact-subhead"><ScrollRevealPlain text={s.contactSubhead} isStatic={false} /></p>
               <a href={`mailto:${s.email}`} className="contact-email-btn">
@@ -987,8 +994,8 @@ export default function PortfolioClient({ settings, about, profilePhotoUrl, proj
                 </svg>
               </a>
             </div>
-            <div className="contact-grid reveal reveal-delay-1">
-              <div className="contact-col">
+            <div className="contact-grid">
+              <div className="contact-col reveal">
                 <h4 className="contact-col-title label">Find me at</h4>
                 <ul>
                   <li>
@@ -1015,7 +1022,7 @@ export default function PortfolioClient({ settings, about, profilePhotoUrl, proj
                   )}
                 </ul>
               </div>
-              <div className="contact-col">
+              <div className="contact-col reveal reveal-delay-1">
                 <h4 className="contact-col-title label">Open to</h4>
                 <ul>
                   {s.openTo?.map((item, i) => (
@@ -1023,7 +1030,7 @@ export default function PortfolioClient({ settings, about, profilePhotoUrl, proj
                   ))}
                 </ul>
               </div>
-              <div className="contact-col">
+              <div className="contact-col reveal reveal-delay-2">
                 <h4 className="contact-col-title label">Response info</h4>
                 <div className="contact-response-card">
                   <div className="crm-row">

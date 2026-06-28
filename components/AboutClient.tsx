@@ -56,6 +56,39 @@ export default function AboutClient({ about, skills, profilePhotoUrl, settings }
     return () => window.removeEventListener('keydown', handleKeyDown)
   }, [])
 
+  /* ─── Scroll-linked word reveal ─── */
+  useEffect(() => {
+    const blocks = document.querySelectorAll('[data-scroll-reveal]')
+    if (!blocks.length) return
+
+    const updateWords = () => {
+      const vh = window.innerHeight
+      const activateY = vh * 0.78
+
+      blocks.forEach(block => {
+        const words = block.querySelectorAll('.scroll-word') as NodeListOf<HTMLElement>
+        words.forEach(word => {
+          const rect = word.getBoundingClientRect()
+          const wordCenter = rect.top + rect.height / 2
+          if (wordCenter < activateY) {
+            word.classList.add('sw-active')
+          } else {
+            word.classList.remove('sw-active')
+          }
+        })
+      })
+    }
+
+    updateWords()
+    window.addEventListener('scroll', updateWords, { passive: true })
+    window.addEventListener('resize', updateWords, { passive: true })
+
+    return () => {
+      window.removeEventListener('scroll', updateWords)
+      window.removeEventListener('resize', updateWords)
+    }
+  }, [])
+
   return (
     <div className="subpage-container">
       {/* Subpage Nav */}
@@ -78,10 +111,10 @@ export default function AboutClient({ about, skills, profilePhotoUrl, settings }
           <div className="about-layout">
             <div className="info-content">
               <p className="info-role reveal scroll-text-block">
-                <ScrollRevealText text={about.role} emphasis={about.roleEmphasis} />
+                <ScrollRevealText text={about.role} emphasis={about.roleEmphasis} isStatic={false} />
               </p>
               <p className="info-bio reveal scroll-text-block">
-                <ScrollRevealText text={about.bio} emphasis={about.bioEmphasis} />
+                <ScrollRevealText text={about.bio} emphasis={about.bioEmphasis} isStatic={false} />
               </p>
             </div>
             <div className="info-photo-area reveal">
@@ -107,12 +140,12 @@ export default function AboutClient({ about, skills, profilePhotoUrl, settings }
           <div className="skills-layout">
             <div className="skills-intro reveal scroll-text-block">
               <p className="skills-intro-text">
-                <ScrollRevealText text="Tools and technologies I use to bring ideas to life — from intelligent systems to polished interfaces." emphasis="intelligent systems" />
+                <ScrollRevealText text="Tools and technologies I use to bring ideas to life — from intelligent systems to polished interfaces." emphasis="intelligent systems" isStatic={false} />
               </p>
             </div>
-            <div className="skills-grid reveal reveal-delay-1">
-              {skills.map((cat) => (
-                <div key={cat._id} className="skill-column">
+            <div className="skills-grid">
+              {skills.map((cat, index) => (
+                <div key={cat._id} className={`skill-column reveal${index > 0 ? ` reveal-delay-${index}` : ''}`}>
                   <h4 className="skill-col-title">{cat.title}</h4>
                   <ul>
                     {cat.skills.map((skill, i) => <li key={i}>{skill}</li>)}

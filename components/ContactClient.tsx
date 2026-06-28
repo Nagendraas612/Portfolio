@@ -18,7 +18,7 @@ interface Props {
   settings: SiteSettings
 }
 
-import { ScrollRevealPlain } from './ScrollReveal'
+import { ScrollRevealPlain, ScrollRevealText } from './ScrollReveal'
 
 export default function ContactClient({ settings }: Props) {
   useEffect(() => {
@@ -39,6 +39,39 @@ export default function ContactClient({ settings }: Props) {
     }
     window.addEventListener('keydown', handleKeyDown)
     return () => window.removeEventListener('keydown', handleKeyDown)
+  }, [])
+
+  /* ─── Scroll-linked word reveal ─── */
+  useEffect(() => {
+    const blocks = document.querySelectorAll('[data-scroll-reveal]')
+    if (!blocks.length) return
+
+    const updateWords = () => {
+      const vh = window.innerHeight
+      const activateY = vh * 0.78
+
+      blocks.forEach(block => {
+        const words = block.querySelectorAll('.scroll-word') as NodeListOf<HTMLElement>
+        words.forEach(word => {
+          const rect = word.getBoundingClientRect()
+          const wordCenter = rect.top + rect.height / 2
+          if (wordCenter < activateY) {
+            word.classList.add('sw-active')
+          } else {
+            word.classList.remove('sw-active')
+          }
+        })
+      })
+    }
+
+    updateWords()
+    window.addEventListener('scroll', updateWords, { passive: true })
+    window.addEventListener('resize', updateWords, { passive: true })
+
+    return () => {
+      window.removeEventListener('scroll', updateWords)
+      window.removeEventListener('resize', updateWords)
+    }
   }, [])
 
   return (
@@ -63,14 +96,21 @@ export default function ContactClient({ settings }: Props) {
           <div className="contact-body">
             <div className="contact-headline reveal">
               <h2 className="contact-big">
-                {settings.contactHeadline?.includes('\n')
-                  ? <>
-                      {settings.contactHeadline.split('\n')[0]}<br /><em>{settings.contactHeadline.split('\n')[1]}</em>
-                    </>
-                  : <>Let&apos;s build<br /><em>something great.</em></>
-                }
+                {settings.contactHeadline?.includes('\n') ? (
+                  <>
+                    <ScrollRevealPlain text={settings.contactHeadline.split('\n')[0]} isStatic={false} />
+                    <br />
+                    <ScrollRevealText text={settings.contactHeadline.split('\n')[1]} emphasis={settings.contactHeadline.split('\n')[1]} isStatic={false} />
+                  </>
+                ) : (
+                  <>
+                    <ScrollRevealPlain text="Let's build" isStatic={false} />
+                    <br />
+                    <ScrollRevealText text="something great." emphasis="something great." isStatic={false} />
+                  </>
+                )}
               </h2>
-              <p className="contact-subhead"><ScrollRevealPlain text={settings.contactSubhead} /></p>
+              <p className="contact-subhead"><ScrollRevealPlain text={settings.contactSubhead} isStatic={false} /></p>
               <a href={`mailto:${settings.email}`} className="contact-email-btn">
                 <span>{settings.email}</span>
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
@@ -78,8 +118,8 @@ export default function ContactClient({ settings }: Props) {
                 </svg>
               </a>
             </div>
-            <div className="contact-grid reveal reveal-delay-1">
-              <div className="contact-col">
+            <div className="contact-grid">
+              <div className="contact-col reveal">
                 <h4 className="contact-col-title label">Find me at</h4>
                 <ul>
                   <li>
@@ -106,7 +146,7 @@ export default function ContactClient({ settings }: Props) {
                   )}
                 </ul>
               </div>
-              <div className="contact-col">
+              <div className="contact-col reveal reveal-delay-1">
                 <h4 className="contact-col-title label">Open to</h4>
                 <ul>
                   {settings.openTo?.map((item, i) => (
@@ -114,7 +154,7 @@ export default function ContactClient({ settings }: Props) {
                   ))}
                 </ul>
               </div>
-              <div className="contact-col">
+              <div className="contact-col reveal reveal-delay-2">
                 <h4 className="contact-col-title label">Response info</h4>
                 <div className="contact-response-card">
                   <div className="crm-row">
