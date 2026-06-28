@@ -95,8 +95,8 @@ export default function ContactClient({ settings }: Props) {
         window.location.href = '/'
       }
     }
-    window.addEventListener('keydown', handleKeyDown)
-    return () => window.removeEventListener('keydown', handleKeyDown)
+    window.addEventListener('keydown', handleKeyDown, true)
+    return () => window.removeEventListener('keydown', handleKeyDown, true)
   }, [])
 
   /* ─── Scroll-linked word reveal ─── */
