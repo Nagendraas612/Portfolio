@@ -349,26 +349,30 @@ export default function PortfolioClient({ settings, about, profilePhotoUrl, proj
     const prog = getProgress()
     const vw = window.innerWidth
     const vh = window.innerHeight
+    const isMobile = vw < 768
 
     let separation = 0, nameOpacity = 1, waveW = 0, waveH = 0, waveOpacity = 0
     let waveBorderRadius = 16, profileOpacity = 0, profileScale = 0.88
     let profilePointerEvents = 'none'
 
+    const maxSeparation = isMobile ? Math.min(vw * 0.32, 120) : Math.min(vw * 0.16, 220)
+    const maxW = isMobile ? Math.min(vw * 0.44, 160) : Math.min(vw * 0.65, 800)
+    const maxH = isMobile ? Math.min(vh * 0.22, 120) : Math.min(vh * 0.50, 500)
+
     if (prog <= 0.50) {
       const sf = prog / 0.50
       const ease = 1 - Math.pow(1 - sf, 2)
-      separation = ease * Math.min(vw * 0.16, 220)
-      const maxW = Math.min(vw * 0.65, 800)
-      const maxH = Math.min(vh * 0.50, 500)
+      separation = ease * maxSeparation
       waveW = ease * maxW; waveH = ease * maxH
       waveOpacity = Math.min(1, ease * 1.5)
+      nameOpacity = isMobile ? 1 - sf * 0.3 : 1 // slight fade on mobile to blend
     } else if (prog <= 0.75) {
       const ff = (prog - 0.50) / 0.25
       const ease = Math.pow(ff, 1.5)
-      separation = Math.min(vw * 0.16, 220) + ease * (vw * 0.4)
+      separation = maxSeparation + ease * (vw * 0.45)
       nameOpacity = 1 - ff
-      const startW = Math.min(vw * 0.65, 800)
-      const startH = Math.min(vh * 0.50, 500)
+      const startW = maxW
+      const startH = maxH
       waveW = startW + (vw - startW) * ease
       waveH = startH + (vh - startH) * ease
       waveOpacity = 1; waveBorderRadius = 16 * (1 - ease)
@@ -383,15 +387,20 @@ export default function PortfolioClient({ settings, about, profilePhotoUrl, proj
       profilePointerEvents = rf > 0.5 ? 'all' : 'none'
     }
 
+    const nameOffset = isNaN(nameOffsetRef.current) ? 0 : nameOffsetRef.current
     if (heroFirstRef.current) {
-      heroFirstRef.current.style.right = `calc(50% + ${separation}px - ${nameOffsetRef.current}px + 0.12em)`
+      heroFirstRef.current.style.right = `calc(50% + ${separation.toFixed(1)}px - ${nameOffset.toFixed(1)}px + 0.12em)`
       heroFirstRef.current.style.transition = 'none'
+      heroFirstRef.current.style.opacity = nameOpacity.toFixed(4)
     }
     if (heroLastRef.current) {
-      heroLastRef.current.style.left = `calc(50% + ${separation}px + ${nameOffsetRef.current}px + 0.12em)`
+      heroLastRef.current.style.left = `calc(50% + ${separation.toFixed(1)}px + ${nameOffset.toFixed(1)}px + 0.12em)`
       heroLastRef.current.style.transition = 'none'
+      heroLastRef.current.style.opacity = nameOpacity.toFixed(4)
     }
-    if (nameWrapperRef.current) nameWrapperRef.current.style.opacity = nameOpacity.toFixed(4)
+    if (nameWrapperRef.current) {
+      nameWrapperRef.current.style.opacity = '1'
+    }
 
     const wc = waveContainerRef.current
     if (wc) {
@@ -807,9 +816,9 @@ export default function PortfolioClient({ settings, about, profilePhotoUrl, proj
                   <span className="hero-dot">.</span>
                 </span>
               </div>
-              <div className="wave-scroll-container" id="waveScrollContainer" ref={waveContainerRef}>
-                <canvas className="wave-scroll-canvas" id="waveScrollCanvas" ref={waveCanvasRef}></canvas>
-              </div>
+            </div>
+            <div className="wave-scroll-container" id="waveScrollContainer" ref={waveContainerRef}>
+              <canvas className="wave-scroll-canvas" id="waveScrollCanvas" ref={waveCanvasRef}></canvas>
             </div>
             <div className="hero-profile-reveal" id="heroProfileReveal" ref={profileRevealRef}>
               <div className="ocean-cloud-bg">

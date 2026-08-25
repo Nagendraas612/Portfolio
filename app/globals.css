@@ -1924,17 +1924,17 @@ button {
 }
 
 /* ============================================================
-   HERO NAME SPLIT â€” Luke Baffait style
+   HERO NAME SPLIT — Luke Baffait style
    Both words start at centre, split apart on scroll
    Wave canvas lives BETWEEN them
    ============================================================ */
 
-/* â”€â”€ Hero section tall enough for scroll â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+/* ── Hero section tall enough for scroll ──────────────────── */
 .hero {
   height: 480vh !important;
 }
 
-/* â”€â”€ Sticky inner fills viewport â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+/* ── Sticky inner fills viewport ─────────────────────────── */
 .hero-sticky-inner {
   position: sticky !important;
   top: 0 !important;
@@ -1945,7 +1945,7 @@ button {
   justify-content: center !important;
 }
 
-/* â”€â”€ Name wrapper: absolute, fills sticky frame â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+/* ── Name wrapper: absolute, fills sticky frame ──────────── */
 .hero-name-wrapper {
   position: absolute !important;
   inset: 0 !important;
@@ -1993,11 +1993,11 @@ button {
   line-height: .9 !important;
   white-space: nowrap !important;
   will-change: transform !important;
-  animation: fadeUpAbsolute .9s .2s var(--ease-out) both !important;
+  animation: fadeUpAbsolute .9s .2s var(--ease-out) !important;
   transition: none !important;
 }
 
-/* â”€â”€ Last name: anchored to left edge of right half â”€â”€â”€â”€â”€â”€â”€â”€ */
+/* ── Last name: anchored to left edge of right half ──────── */
 .hero-word--last {
   position: absolute !important;
   top: 50% !important;
@@ -2012,7 +2012,7 @@ button {
   line-height: .9 !important;
   white-space: nowrap !important;
   will-change: transform !important;
-  animation: fadeUpAbsolute .9s .35s var(--ease-out) both !important;
+  animation: fadeUpAbsolute .9s .35s var(--ease-out) !important;
   transition: none !important;
 }
 
@@ -2158,6 +2158,7 @@ button {
   position: absolute !important;
   inset: 0 !important;
   width: 100% !important;
+  height: 100% !important;
   display: flex !important;
   flex-direction: column !important;
   justify-content: space-between !important;
@@ -2250,7 +2251,7 @@ button {
 
   .hero-word--first,
   .hero-word--last {
-    font-size: clamp(2.8rem, 14vw, 6rem) !important;
+    font-size: clamp(2.4rem, 10vw, 4.2rem) !important;
   }
 
   .hero {
@@ -2262,7 +2263,7 @@ button {
 
   .hero-word--first,
   .hero-word--last {
-    font-size: clamp(2.2rem, 12vw, 4.5rem) !important;
+    font-size: clamp(1.8rem, 9vw, 3rem) !important;
   }
 }
 
@@ -2368,6 +2369,7 @@ button {
     position: absolute !important;
     inset: 0 !important;
     width: 100% !important;
+    height: 100% !important;
     display: flex !important;
     flex-direction: column !important;
     justify-content: space-between !important;
