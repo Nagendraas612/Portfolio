@@ -322,10 +322,11 @@ export default function PortfolioClient({ settings, about, profilePhotoUrl, proj
     if (!img || !img.complete || !img.naturalWidth) return
     const canvas = waveCanvasRef.current
     if (!canvas) return
-    const dpr = Math.min(devicePixelRatio || 1, 2)
+    const dpr = Math.min(window.devicePixelRatio || 1, 2)
     const w = canvas.width / dpr
     const h = canvas.height / dpr
     if (w <= 0 || h <= 0) return
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0)
     ctx.clearRect(0, 0, w, h)
     const ia = img.naturalWidth / img.naturalHeight
     const ca = w / h
@@ -359,29 +360,34 @@ export default function PortfolioClient({ settings, about, profilePhotoUrl, proj
     const maxW = isMobile ? Math.min(vw * 0.44, 160) : Math.min(vw * 0.65, 800)
     const maxH = isMobile ? Math.min(vh * 0.22, 120) : Math.min(vh * 0.50, 500)
 
-    if (prog <= 0.50) {
-      const sf = prog / 0.50
+    if (prog <= 0.45) {
+      const sf = prog / 0.45
       const ease = 1 - Math.pow(1 - sf, 2)
       separation = ease * maxSeparation
       waveW = ease * maxW; waveH = ease * maxH
       waveOpacity = Math.min(1, ease * 1.5)
-      nameOpacity = isMobile ? 1 - sf * 0.3 : 1 // slight fade on mobile to blend
-    } else if (prog <= 0.75) {
-      const ff = (prog - 0.50) / 0.25
+      nameOpacity = isMobile ? 1 - sf * 0.6 : 1 // fade faster on mobile to avoid edge clipping
+    } else if (prog <= 0.70) {
+      const ff = (prog - 0.45) / 0.25
       const ease = Math.pow(ff, 1.5)
       separation = maxSeparation + ease * (vw * 0.45)
-      nameOpacity = 1 - ff
+      nameOpacity = isMobile ? Math.max(0, (1 - ff * 2) * 0.4) : 1 - ff
       const startW = maxW
       const startH = maxH
       waveW = startW + (vw - startW) * ease
       waveH = startH + (vh - startH) * ease
       waveOpacity = 1; waveBorderRadius = 16 * (1 - ease)
+    } else if (prog <= 0.82) {
+      const wf = (prog - 0.70) / 0.12
+      separation = vw * 0.6; nameOpacity = 0
+      waveW = vw; waveH = vh
+      waveOpacity = 1 - wf; waveBorderRadius = 0
+      profileOpacity = 0
     } else {
-      const rf = (prog - 0.75) / 0.25
+      const rf = (prog - 0.82) / 0.18
       const ease = 1 - Math.pow(1 - rf, 2)
       separation = vw * 0.6; nameOpacity = 0
-      waveW = vw * (1 - ease * 0.25); waveH = vh * (1 - ease * 0.25)
-      waveOpacity = 1 - ease; waveBorderRadius = ease * 16
+      waveW = vw; waveH = vh; waveOpacity = 0
       profileOpacity = Math.min(1, rf * 1.5)
       profileScale = 0.88 + ease * 0.12
       profilePointerEvents = rf > 0.5 ? 'all' : 'none'
@@ -408,6 +414,13 @@ export default function PortfolioClient({ settings, about, profilePhotoUrl, proj
       wc.style.height = waveH.toFixed(1) + 'px'
       wc.style.opacity = waveOpacity.toFixed(4)
       wc.style.borderRadius = waveBorderRadius.toFixed(1) + 'px'
+
+      const canvas = waveCanvasRef.current
+      if (canvas) {
+        const dpr = Math.min(window.devicePixelRatio || 1, 2)
+        canvas.width = Math.round(waveW * dpr)
+        canvas.height = Math.round(waveH * dpr)
+      }
     }
 
     const frameIdx = Math.min(FRAME_COUNT - 1, Math.round(prog * (FRAME_COUNT - 1)))
