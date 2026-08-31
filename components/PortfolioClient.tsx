@@ -93,7 +93,7 @@ const FALLBACK_SETTINGS: SiteSettings = {
   heroTagline: 'I build *intelligent systems.*',
   heroSubtitle: 'CS student · AI & ML · VVCE',
   availabilityText: 'Available for opportunities · 2026',
-  email: 'nagendraas612@gmail.com',
+  email: 'nagendraas.engineer@gmail.com',
   githubUrl: 'https://github.com/Nagendraas612',
   linkedinUrl: 'https://linkedin.com/in/nagendraas612',
   contactHeadline: "Let's build\nsomething great.",
