@@ -30,6 +30,7 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 import FloatingDockWrapper from '../components/FloatingDockWrapper'
+import { Analytics } from '@vercel/analytics/next'
 
 export default async function RootLayout({
   children,
@@ -56,6 +57,7 @@ export default async function RootLayout({
       <body>
         {children}
         <FloatingDockWrapper settings={settings} />
+        <Analytics />
       </body>
     </html>
   )
